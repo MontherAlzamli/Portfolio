@@ -211,9 +211,9 @@ export function HeroSection() {
                       {/* Image container */}
                       <div className="w-full h-full rounded-2xl overflow-hidden bg-background-secondary">
                         <img
-                          src={profile?.profileImage || '/profile-image.jpg'}
+                          src={profile?.profileImage || '/monther.jpg'}
                           alt={`Profile photo of ${profile?.name || 'Monther Alzamli'}`}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-top object-cover"
                           loading="eager"
                           width="384"
                           height="384"

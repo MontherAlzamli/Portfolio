@@ -26,8 +26,7 @@ export const uploadImage = async (
       transformation: options.transformation || [
         {
           width: 1200,
-          height: 800,
-          crop: 'fill',
+          crop: 'fit',
           quality: 'auto',
           format: 'auto',
         },
@@ -109,7 +108,7 @@ export const getOptimizedImageUrl = (
   return cloudinary.url(publicId, {
     width: options.width,
     height: options.height,
-    crop: options.crop || 'fill',
+    crop: options.crop || 'fit',
     quality: options.quality || 'auto',
     format: options.format || 'auto',
   });
