@@ -5,6 +5,7 @@ import {
   Code2,
   Database,
   LayoutTemplate,
+  Lightbulb,
   Server,
   Smartphone,
   Wrench,
@@ -20,6 +21,7 @@ const groupIcons: [RegExp, LucideIcon][] = [
   [/data|sql|storage/i, Database],
   [/devops|cloud|deploy|infra|hosting/i, Cloud],
   [/mobile|android|ios|native/i, Smartphone],
+  [/concept|principle|pattern|architecture/i, Lightbulb],
   [/tool|test|other|misc/i, Wrench],
 ];
 

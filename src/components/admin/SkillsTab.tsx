@@ -37,15 +37,8 @@ const skillCategories = [
   'DevOps',
   'Design',
   'Tools',
+  'Concepts',
   'Other',
-];
-
-const skillLevels = [
-  { value: 1, label: 'Beginner' },
-  { value: 2, label: 'Novice' },
-  { value: 3, label: 'Intermediate' },
-  { value: 4, label: 'Advanced' },
-  { value: 5, label: 'Expert' },
 ];
 
 export default function SkillsTab() {
@@ -362,7 +355,7 @@ export default function SkillsTab() {
                     onDrop={e => handleDrop(e, skill.id)}
                     className="bg-bg rounded-md border border-line p-4 hover:shadow-md transition-shadow cursor-move"
                   >
-                    <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
                         <GripVertical className="h-4 w-4 text-muted" />
                         {skill.iconUrl && (
@@ -389,24 +382,6 @@ export default function SkillsTab() {
                         >
                           <Trash2 className="h-3 w-3" />
                         </button>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <div className="flex justify-between items-center">
-                        <span className="text-xs text-muted">Proficiency</span>
-                        <span className="text-xs text-brand font-medium">
-                          {
-                            skillLevels.find(l => l.value === skill.level)
-                              ?.label
-                          }
-                        </span>
-                      </div>
-                      <div className="h-2 bg-surface rounded-full overflow-hidden">
-                        <div
-                          className="h-2 bg-brand-solid rounded-full transition-all duration-300"
-                          style={{ width: `${(skill.level / 5) * 100}%` }}
-                        />
                       </div>
                     </div>
                   </div>
@@ -466,29 +441,6 @@ export default function SkillsTab() {
                   {skillCategories.map(category => (
                     <option key={category} value={category}>
                       {category}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-fg mb-2">
-                  Proficiency Level *
-                </label>
-                <select
-                  required
-                  value={formData.level}
-                  onChange={e =>
-                    setFormData(prev => ({
-                      ...prev,
-                      level: parseInt(e.target.value),
-                    }))
-                  }
-                  className="w-full px-3 py-2 bg-bg border border-line rounded-md text-fg focus:ring-2 focus:ring-brand focus:border-transparent"
-                >
-                  {skillLevels.map(level => (
-                    <option key={level.value} value={level.value}>
-                      {level.label}
                     </option>
                   ))}
                 </select>

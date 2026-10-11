@@ -48,5 +48,6 @@ export const site = {
     'DevOps',
     'Mobile',
     'Tools',
+    'Concepts',
   ],
 };

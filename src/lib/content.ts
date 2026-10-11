@@ -20,7 +20,7 @@ export type PublicProfile = Pick<
   | 'website'
   | 'github'
   | 'linkedin'
-  | 'twitter'
+  | 'cvUrl'
   | 'profileImage'
 >;
 
@@ -44,7 +44,7 @@ const fallbackProfile: PublicProfile = {
   website: site.url,
   github: null,
   linkedin: null,
-  twitter: null,
+  cvUrl: null,
   profileImage: '/profile-image.jpg',
 };
 

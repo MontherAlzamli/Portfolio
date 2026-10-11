@@ -1,4 +1,5 @@
-import { Clock, Github, Linkedin, Mail, MapPin, Twitter } from 'lucide-react';
+import { Clock, Github, Linkedin, Mail, MapPin } from 'lucide-react';
+import { CvLink } from '@/components/ui/CvLink';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { ContactForm } from '@/components/sections/ContactForm';
 import { site } from '@/data/site';
@@ -8,7 +9,6 @@ export function ContactSection({ profile }: { profile: PublicProfile }) {
   const socials = [
     { label: 'GitHub', href: profile.github, Icon: Github },
     { label: 'LinkedIn', href: profile.linkedin, Icon: Linkedin },
-    { label: 'X (Twitter)', href: profile.twitter, Icon: Twitter },
   ].filter(item => item.href);
 
   return (
@@ -66,7 +66,7 @@ export function ContactSection({ profile }: { profile: PublicProfile }) {
               </li>
             </ul>
 
-            {socials.length > 0 && (
+            {(socials.length > 0 || profile.cvUrl) && (
               <div className="mt-8 border-t border-line pt-6">
                 <p className="mb-3 font-mono text-xs text-muted">
                   Find me online
@@ -86,6 +86,11 @@ export function ContactSection({ profile }: { profile: PublicProfile }) {
                       </a>
                     </li>
                   ))}
+                  {profile.cvUrl && (
+                    <li>
+                      <CvLink href={profile.cvUrl} />
+                    </li>
+                  )}
                 </ul>
               </div>
             )}

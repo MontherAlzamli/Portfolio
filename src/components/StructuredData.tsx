@@ -37,9 +37,7 @@ export function StructuredData({
               },
             }
           : {}),
-        sameAs: [profile.github, profile.linkedin, profile.twitter].filter(
-          Boolean
-        ),
+        sameAs: [profile.github, profile.linkedin].filter(Boolean),
         ...(skills.length > 0 ? { knowsAbout: skills } : {}),
         ...(schools.length > 0
           ? {

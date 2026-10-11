@@ -13,7 +13,7 @@ import {
   Globe,
   Github,
   Linkedin,
-  Twitter,
+  FileText,
   Loader2,
   Image,
   X,
@@ -30,7 +30,7 @@ interface ProfileData {
   website: string;
   github: string;
   linkedin: string;
-  twitter: string;
+  cvUrl: string | null;
   profileImage: string;
 }
 
@@ -54,7 +54,7 @@ export default function ProfileTab() {
     website: '',
     github: '',
     linkedin: '',
-    twitter: '',
+    cvUrl: '',
     profileImage: '/profile-image.jpg',
   });
   const [loading, setLoading] = useState(true);
@@ -443,17 +443,18 @@ export default function ProfileTab() {
 
                 <div>
                   <label className="block text-sm font-medium text-fg mb-2">
-                    Twitter
+                    CV link
                   </label>
                   <div className="relative">
-                    <Twitter className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted" />
+                    <FileText className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted" />
                     <input
-                      type="url"
-                      value={profileData.twitter}
+                      type="text"
+                      placeholder="https://... or /cv.pdf"
+                      value={profileData.cvUrl ?? ''}
                       onChange={e =>
                         setProfileData(prev => ({
                           ...prev,
-                          twitter: e.target.value,
+                          cvUrl: e.target.value,
                         }))
                       }
                       className="w-full pl-10 pr-3 py-2 bg-bg border border-line rounded-md text-fg focus:ring-2 focus:ring-brand focus:border-transparent"

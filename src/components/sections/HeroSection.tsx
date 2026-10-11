@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react';
 import { ArrowDown, Github, Linkedin, Mail } from 'lucide-react';
 import { site } from '@/data/site';
 import type { PublicProfile } from '@/lib/content';
+import { CvLink } from '@/components/ui/CvLink';
 import { HeroTerminal } from '@/components/sections/HeroTerminal';
 
 // Position in the page-load sequence
@@ -64,6 +65,7 @@ export function HeroSection({ profile }: { profile: PublicProfile }) {
             <a href="#contact" className="btn btn-outline">
               Contact me
             </a>
+            {profile.cvUrl && <CvLink href={profile.cvUrl} />}
           </div>
 
           <div

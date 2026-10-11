@@ -19,7 +19,9 @@ const SkillSchema = z.object({
     .number()
     .int()
     .min(1, 'Level must be at least 1')
-    .max(5, 'Level must be at most 5'),
+    .max(5, 'Level must be at most 5')
+    .optional()
+    .default(3),
   iconUrl: z.string().url('Must be a valid URL').optional().or(z.literal('')),
   order: z
     .number()

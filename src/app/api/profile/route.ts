@@ -63,9 +63,10 @@ const ProfileSchema = z.object({
         message: 'Must be a valid URL or empty',
       }
     ),
+  // No longer shown on the site; still accepted so saved profiles keep validating
   twitter: z
     .string()
-    .optional()
+    .nullish()
     .refine(
       val => !val || val === '' || z.string().url().safeParse(val).success,
       {
@@ -83,6 +84,19 @@ const ProfileSchema = z.object({
         val.startsWith('/'),
       {
         message: 'Must be a valid URL or relative path',
+      }
+    ),
+  cvUrl: z
+    .string()
+    .nullish()
+    .refine(
+      val =>
+        !val ||
+        val === '' ||
+        z.string().url().safeParse(val).success ||
+        val.startsWith('/'),
+      {
+        message: 'Must be a valid URL or a path like /cv.pdf',
       }
     ),
 });
@@ -104,7 +118,6 @@ export async function GET() {
           website: 'https://monther-alzamli.com',
           github: 'https://github.com/MontherIsmail',
           linkedin: 'https://linkedin.com/in/MontherAlzamli',
-          twitter: 'https://twitter.com/MontherAlzamli',
           profileImage: '/profile-image.jpg',
         },
       });
