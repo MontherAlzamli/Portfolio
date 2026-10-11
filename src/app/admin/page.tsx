@@ -19,10 +19,10 @@ export default function AdminDashboard() {
 
   if (status === 'loading') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background-primary">
+      <div className="min-h-screen flex items-center justify-center bg-bg">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-400 mx-auto mb-4"></div>
-          <p className="text-text-secondary">Redirecting to dashboard...</p>
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-brand mx-auto mb-4"></div>
+          <p className="text-muted">Redirecting to dashboard...</p>
         </div>
       </div>
     );
@@ -30,9 +30,9 @@ export default function AdminDashboard() {
 
   // This should not be reached due to redirects, but just in case
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background-primary">
+    <div className="min-h-screen flex items-center justify-center bg-bg">
       <div className="text-center">
-        <p className="text-text-secondary">Redirecting...</p>
+        <p className="text-muted">Redirecting...</p>
       </div>
     </div>
   );

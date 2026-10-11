@@ -15,7 +15,7 @@ export default function AdminLayout({
 }) {
   return (
     <AuthProvider>
-      {children}
+      <div className="admin">{children}</div>
       <ToastContainer
         position="top-right"
         autoClose={3000}

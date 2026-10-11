@@ -1,0 +1,2 @@
+# Keep LF line endings on every platform so Prettier and ESLint agree
+* text=auto eol=lf

@@ -87,8 +87,8 @@ export default function ProfileTab() {
         title: 'Error!',
         text: 'Failed to load profile data',
         icon: 'error',
-        color: '#e2e8f0',
-        background: '#1e293b',
+        color: 'rgb(var(--fg))',
+        background: 'rgb(var(--surface))',
         confirmButtonColor: '#ef4444',
       });
     } finally {
@@ -116,9 +116,9 @@ export default function ProfileTab() {
           icon: 'success',
           timer: 2000,
           showConfirmButton: false,
-          color: '#e2e8f0',
-          background: '#1e293b',
-          confirmButtonColor: '#3b82f6',
+          color: 'rgb(var(--fg))',
+          background: 'rgb(var(--surface))',
+          confirmButtonColor: '#15803d',
         });
       } else {
         const errorData = await response.json();
@@ -126,8 +126,8 @@ export default function ProfileTab() {
           title: 'Error!',
           text: errorData.error || 'Failed to update profile',
           icon: 'error',
-          color: '#e2e8f0',
-          background: '#1e293b',
+          color: 'rgb(var(--fg))',
+          background: 'rgb(var(--surface))',
           confirmButtonColor: '#ef4444',
         });
       }
@@ -136,8 +136,8 @@ export default function ProfileTab() {
         title: 'Error!',
         text: 'Network error occurred',
         icon: 'error',
-        color: '#e2e8f0',
-        background: '#1e293b',
+        color: 'rgb(var(--fg))',
+        background: 'rgb(var(--surface))',
         confirmButtonColor: '#ef4444',
       });
     } finally {
@@ -182,9 +182,9 @@ export default function ProfileTab() {
       icon: 'success',
       timer: 2000,
       showConfirmButton: false,
-      color: '#e2e8f0',
-      background: '#1e293b',
-      confirmButtonColor: '#3b82f6',
+      color: 'rgb(var(--fg))',
+      background: 'rgb(var(--surface))',
+      confirmButtonColor: '#15803d',
     });
   };
 
@@ -197,26 +197,24 @@ export default function ProfileTab() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold text-text-primary">
-          Profile Management
-        </h2>
+        <h2 className="text-2xl font-semibold text-fg">Profile Management</h2>
       </div>
 
       {loading ? (
         <div className="flex items-center justify-center h-64">
-          <Loader2 className="h-8 w-8 animate-spin text-primary-400" />
+          <Loader2 className="h-8 w-8 animate-spin text-brand" />
         </div>
       ) : (
         /* Profile Form */
-        <div className="bg-background-secondary rounded-xl border border-border-primary p-6">
+        <div className="bg-surface rounded-lg border border-line p-6">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Profile Image */}
             <div className="space-y-4">
               <div>
-                <h3 className="text-lg font-semibold text-text-primary mb-2">
+                <h3 className="text-lg font-semibold text-fg mb-2">
                   Profile Picture
                 </h3>
-                <p className="text-sm text-text-secondary mb-4">
+                <p className="text-sm text-muted mb-4">
                   Upload a new image or choose from your gallery
                 </p>
               </div>
@@ -227,7 +225,7 @@ export default function ProfileTab() {
                   <img
                     src={profileData.profileImage}
                     alt="Current Profile"
-                    className="w-20 h-20 rounded-lg object-cover border-2 border-border-primary"
+                    className="w-20 h-20 rounded-md object-cover border-2 border-line"
                   />
                   <div className="flex space-x-2">
                     <button
@@ -236,7 +234,7 @@ export default function ProfileTab() {
                         e.stopPropagation();
                         openImageSelector();
                       }}
-                      className="px-3 py-2 bg-primary-400 text-white rounded-lg hover:bg-primary-500 transition-colors flex items-center space-x-2"
+                      className="px-3 py-2 bg-brand-solid text-brand-on rounded-md hover:bg-brand-solid/90 transition-colors flex items-center space-x-2"
                     >
                       <Image className="h-4 w-4" />
                       <span>Choose from Gallery</span>
@@ -262,7 +260,7 @@ export default function ProfileTab() {
             {/* Basic Information */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-text-primary mb-2">
+                <label className="block text-sm font-medium text-fg mb-2">
                   Full Name *
                 </label>
                 <input
@@ -272,12 +270,12 @@ export default function ProfileTab() {
                   onChange={e =>
                     setProfileData(prev => ({ ...prev, name: e.target.value }))
                   }
-                  className="w-full px-3 py-2 bg-background-primary border border-border-primary rounded-lg text-text-primary focus:ring-2 focus:ring-primary-400 focus:border-transparent"
+                  className="w-full px-3 py-2 bg-bg border border-line rounded-md text-fg focus:ring-2 focus:ring-brand focus:border-transparent"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-text-primary mb-2">
+                <label className="block text-sm font-medium text-fg mb-2">
                   Professional Title *
                 </label>
                 <input
@@ -287,13 +285,13 @@ export default function ProfileTab() {
                   onChange={e =>
                     setProfileData(prev => ({ ...prev, title: e.target.value }))
                   }
-                  className="w-full px-3 py-2 bg-background-primary border border-border-primary rounded-lg text-text-primary focus:ring-2 focus:ring-primary-400 focus:border-transparent"
+                  className="w-full px-3 py-2 bg-bg border border-line rounded-md text-fg focus:ring-2 focus:ring-brand focus:border-transparent"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-text-primary mb-2">
+              <label className="block text-sm font-medium text-fg mb-2">
                 Bio *
               </label>
               <textarea
@@ -303,24 +301,24 @@ export default function ProfileTab() {
                 onChange={e =>
                   setProfileData(prev => ({ ...prev, bio: e.target.value }))
                 }
-                className="w-full px-3 py-2 bg-background-primary border border-border-primary rounded-lg text-text-primary focus:ring-2 focus:ring-primary-400 focus:border-transparent resize-none"
+                className="w-full px-3 py-2 bg-bg border border-line rounded-md text-fg focus:ring-2 focus:ring-brand focus:border-transparent resize-none"
                 placeholder="Tell us about yourself..."
               />
             </div>
 
             {/* Contact Information */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-text-primary">
+              <h3 className="text-lg font-semibold text-fg">
                 Contact Information
               </h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-text-primary mb-2">
+                  <label className="block text-sm font-medium text-fg mb-2">
                     Email *
                   </label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-text-secondary" />
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted" />
                     <input
                       type="email"
                       required
@@ -331,17 +329,17 @@ export default function ProfileTab() {
                           email: e.target.value,
                         }))
                       }
-                      className="w-full pl-10 pr-3 py-2 bg-background-primary border border-border-primary rounded-lg text-text-primary focus:ring-2 focus:ring-primary-400 focus:border-transparent"
+                      className="w-full pl-10 pr-3 py-2 bg-bg border border-line rounded-md text-fg focus:ring-2 focus:ring-brand focus:border-transparent"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-text-primary mb-2">
+                  <label className="block text-sm font-medium text-fg mb-2">
                     Phone
                   </label>
                   <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-text-secondary" />
+                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted" />
                     <input
                       type="tel"
                       value={profileData.phone}
@@ -351,17 +349,17 @@ export default function ProfileTab() {
                           phone: e.target.value,
                         }))
                       }
-                      className="w-full pl-10 pr-3 py-2 bg-background-primary border border-border-primary rounded-lg text-text-primary focus:ring-2 focus:ring-primary-400 focus:border-transparent"
+                      className="w-full pl-10 pr-3 py-2 bg-bg border border-line rounded-md text-fg focus:ring-2 focus:ring-brand focus:border-transparent"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-text-primary mb-2">
+                  <label className="block text-sm font-medium text-fg mb-2">
                     Location
                   </label>
                   <div className="relative">
-                    <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-text-secondary" />
+                    <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted" />
                     <input
                       type="text"
                       value={profileData.location}
@@ -371,17 +369,17 @@ export default function ProfileTab() {
                           location: e.target.value,
                         }))
                       }
-                      className="w-full pl-10 pr-3 py-2 bg-background-primary border border-border-primary rounded-lg text-text-primary focus:ring-2 focus:ring-primary-400 focus:border-transparent"
+                      className="w-full pl-10 pr-3 py-2 bg-bg border border-line rounded-md text-fg focus:ring-2 focus:ring-brand focus:border-transparent"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-text-primary mb-2">
+                  <label className="block text-sm font-medium text-fg mb-2">
                     Website
                   </label>
                   <div className="relative">
-                    <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-text-secondary" />
+                    <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted" />
                     <input
                       type="url"
                       value={profileData.website}
@@ -391,7 +389,7 @@ export default function ProfileTab() {
                           website: e.target.value,
                         }))
                       }
-                      className="w-full pl-10 pr-3 py-2 bg-background-primary border border-border-primary rounded-lg text-text-primary focus:ring-2 focus:ring-primary-400 focus:border-transparent"
+                      className="w-full pl-10 pr-3 py-2 bg-bg border border-line rounded-md text-fg focus:ring-2 focus:ring-brand focus:border-transparent"
                     />
                   </div>
                 </div>
@@ -400,17 +398,15 @@ export default function ProfileTab() {
 
             {/* Social Links */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-text-primary">
-                Social Links
-              </h3>
+              <h3 className="text-lg font-semibold text-fg">Social Links</h3>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-text-primary mb-2">
+                  <label className="block text-sm font-medium text-fg mb-2">
                     GitHub
                   </label>
                   <div className="relative">
-                    <Github className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-text-secondary" />
+                    <Github className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted" />
                     <input
                       type="url"
                       value={profileData.github}
@@ -420,17 +416,17 @@ export default function ProfileTab() {
                           github: e.target.value,
                         }))
                       }
-                      className="w-full pl-10 pr-3 py-2 bg-background-primary border border-border-primary rounded-lg text-text-primary focus:ring-2 focus:ring-primary-400 focus:border-transparent"
+                      className="w-full pl-10 pr-3 py-2 bg-bg border border-line rounded-md text-fg focus:ring-2 focus:ring-brand focus:border-transparent"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-text-primary mb-2">
+                  <label className="block text-sm font-medium text-fg mb-2">
                     LinkedIn
                   </label>
                   <div className="relative">
-                    <Linkedin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-text-secondary" />
+                    <Linkedin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted" />
                     <input
                       type="url"
                       value={profileData.linkedin}
@@ -440,17 +436,17 @@ export default function ProfileTab() {
                           linkedin: e.target.value,
                         }))
                       }
-                      className="w-full pl-10 pr-3 py-2 bg-background-primary border border-border-primary rounded-lg text-text-primary focus:ring-2 focus:ring-primary-400 focus:border-transparent"
+                      className="w-full pl-10 pr-3 py-2 bg-bg border border-line rounded-md text-fg focus:ring-2 focus:ring-brand focus:border-transparent"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-text-primary mb-2">
+                  <label className="block text-sm font-medium text-fg mb-2">
                     Twitter
                   </label>
                   <div className="relative">
-                    <Twitter className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-text-secondary" />
+                    <Twitter className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted" />
                     <input
                       type="url"
                       value={profileData.twitter}
@@ -460,7 +456,7 @@ export default function ProfileTab() {
                           twitter: e.target.value,
                         }))
                       }
-                      className="w-full pl-10 pr-3 py-2 bg-background-primary border border-border-primary rounded-lg text-text-primary focus:ring-2 focus:ring-primary-400 focus:border-transparent"
+                      className="w-full pl-10 pr-3 py-2 bg-bg border border-line rounded-md text-fg focus:ring-2 focus:ring-brand focus:border-transparent"
                     />
                   </div>
                 </div>
@@ -468,11 +464,11 @@ export default function ProfileTab() {
             </div>
 
             {/* Save Button */}
-            <div className="flex items-center justify-end pt-6 border-t border-border-primary">
+            <div className="flex items-center justify-end pt-6 border-t border-line">
               <button
                 type="submit"
                 disabled={saving}
-                className="flex items-center px-6 py-3 bg-primary-400 text-white rounded-lg hover:bg-primary-500 transition-colors disabled:opacity-50"
+                className="flex items-center px-6 py-3 bg-brand-solid text-brand-on rounded-md hover:bg-brand-solid/90 transition-colors disabled:opacity-50"
               >
                 {saving && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                 <Save className="h-4 w-4 mr-2" />
@@ -486,37 +482,35 @@ export default function ProfileTab() {
       {/* Image Selector Modal */}
       {showImageSelector && (
         <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-          <div className="bg-background-secondary rounded-xl max-w-4xl max-h-[90vh] overflow-hidden w-full">
-            <div className="flex items-center justify-between p-4 border-b border-border-primary">
-              <h3 className="text-lg font-semibold text-text-primary">
+          <div className="bg-surface rounded-lg max-w-4xl max-h-[90vh] overflow-hidden w-full">
+            <div className="flex items-center justify-between p-4 border-b border-line">
+              <h3 className="text-lg font-semibold text-fg">
                 Choose Profile Image
               </h3>
               <button
                 onClick={() => setShowImageSelector(false)}
-                className="p-2 hover:bg-background-primary rounded-lg transition-colors"
+                className="p-2 hover:bg-bg rounded-md transition-colors"
               >
-                <X className="h-5 w-5 text-text-secondary" />
+                <X className="h-5 w-5 text-muted" />
               </button>
             </div>
 
             <div className="p-4 max-h-[70vh] overflow-y-auto">
               {loadingImages ? (
                 <div className="flex items-center justify-center h-32">
-                  <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary-400 border-t-transparent"></div>
+                  <div className="animate-spin rounded-full h-8 w-8 border-2 border-brand border-t-transparent"></div>
                 </div>
               ) : availableImages.length === 0 ? (
                 <div className="text-center py-12">
-                  <Image className="h-12 w-12 text-text-secondary mx-auto mb-4" />
-                  <div className="text-text-secondary mb-2">
-                    No images found
-                  </div>
-                  <div className="text-sm text-text-secondary mb-4">
+                  <Image className="h-12 w-12 text-muted mx-auto mb-4" />
+                  <div className="text-muted mb-2">No images found</div>
+                  <div className="text-sm text-muted mb-4">
                     Upload images in the Images tab first, then come back here
                     to select one
                   </div>
                   <button
                     onClick={() => setShowImageSelector(false)}
-                    className="px-4 py-2 bg-primary-400 text-white rounded-lg hover:bg-primary-500 transition-colors"
+                    className="px-4 py-2 bg-brand-solid text-brand-on rounded-md hover:bg-brand-solid/90 transition-colors"
                   >
                     Close
                   </button>
@@ -525,7 +519,7 @@ export default function ProfileTab() {
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                   {availableImages.map(image => (
                     <div key={image.public_id} className="group relative">
-                      <div className="aspect-square bg-background-primary rounded-lg overflow-hidden border border-border-primary">
+                      <div className="aspect-square bg-bg rounded-md overflow-hidden border border-line">
                         <img
                           src={image.secure_url}
                           alt={image.public_id}
@@ -536,7 +530,7 @@ export default function ProfileTab() {
                         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                           <button
                             onClick={() => handleImageSelect(image.secure_url)}
-                            className="p-2 bg-primary-400/20 rounded-lg hover:bg-primary-400/30 transition-colors"
+                            className="p-2 bg-brand/20 rounded-md hover:bg-brand/30 transition-colors"
                           >
                             <Check className="h-6 w-6 text-white" />
                           </button>
@@ -544,7 +538,7 @@ export default function ProfileTab() {
                       </div>
 
                       {/* Image Info */}
-                      <div className="mt-2 text-xs text-text-secondary">
+                      <div className="mt-2 text-xs text-muted">
                         <div>
                           {image.width} × {image.height}
                         </div>

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { signOut } from 'next-auth/react';
+import Link from 'next/link';
 import {
   LayoutDashboard,
   FolderOpen,
@@ -15,6 +16,8 @@ import {
   X,
   Mail,
   Image,
+  ExternalLink,
+  LogOut,
 } from 'lucide-react';
 import ProjectsTab from '@/components/admin/ProjectsTab';
 import SkillsTab from '@/components/admin/SkillsTab';
@@ -25,6 +28,7 @@ import SettingsTab from '@/components/admin/SettingsTab';
 import ContactsTab from '@/components/admin/ContactsTab';
 import ImageGallery from '@/components/admin/ImageGallery';
 import NotificationContainer from '@/components/admin/NotificationContainer';
+import { ThemeToggle } from '@/components/layout/ThemeToggle';
 
 const sidebarItems = [
   { id: 'overview', label: 'Overview', icon: LayoutDashboard },
@@ -79,7 +83,7 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-background-primary">
+    <div className="min-h-screen bg-bg">
       <NotificationContainer />
 
       {/* Mobile sidebar overlay */}
@@ -92,23 +96,27 @@ export default function AdminDashboard() {
 
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-background-secondary border-r border-border-primary transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-surface border-r border-line transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="flex items-center justify-between h-16 px-6 border-b border-border-primary">
-          <h1 className="text-xl font-bold text-text-primary">
-            Admin Dashboard
+        <div className="flex items-center justify-between h-16 px-6 border-b border-line">
+          <h1 className="text-base font-semibold text-fg">
+            <span className="text-brand" aria-hidden="true">
+              ~/
+            </span>
+            admin
           </h1>
           <button
             onClick={() => setSidebarOpen(false)}
-            className="lg:hidden text-text-secondary hover:text-text-primary"
+            className="icon-btn lg:hidden"
+            aria-label="Close menu"
           >
-            <X size={24} />
+            <X size={20} aria-hidden="true" />
           </button>
         </div>
 
-        <nav className="mt-6 px-3">
+        <nav className="mt-6 px-3" aria-label="Dashboard sections">
           {sidebarItems.map(item => {
             const Icon = item.icon;
             return (
@@ -118,13 +126,14 @@ export default function AdminDashboard() {
                   setActiveTab(item.id);
                   setSidebarOpen(false);
                 }}
-                className={`w-full flex items-center px-3 py-3 text-left rounded-lg transition-colors duration-200 mb-1 ${
+                aria-current={activeTab === item.id ? 'page' : undefined}
+                className={`w-full flex items-center px-3 py-3 text-left font-mono text-sm rounded-md border transition-colors duration-200 mb-1 ${
                   activeTab === item.id
-                    ? 'bg-primary-400 text-white'
-                    : 'text-text-secondary hover:text-text-primary hover:bg-background-primary'
+                    ? 'border-brand/40 bg-brand/10 text-brand'
+                    : 'border-transparent text-muted hover:text-fg hover:bg-bg'
                 }`}
               >
-                <Icon size={20} className="mr-3" />
+                <Icon size={18} className="mr-3" aria-hidden="true" />
                 {item.label}
               </button>
             );
@@ -135,23 +144,36 @@ export default function AdminDashboard() {
       {/* Main content */}
       <div className="lg:ml-64">
         {/* Top bar */}
-        <header className="bg-background-secondary border-b border-border-primary h-16 flex items-center justify-between px-6">
+        <header className="bg-surface border-b border-line h-16 flex items-center justify-between px-6">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="lg:hidden text-text-secondary hover:text-text-primary"
+            className="icon-btn lg:hidden"
+            aria-label="Open menu"
           >
-            <Menu size={24} />
+            <Menu size={20} aria-hidden="true" />
           </button>
 
-          <div className="flex items-center space-x-4">
-            <div className="text-sm text-text-secondary">
-              Welcome back, Admin
-            </div>
-            <button
-              onClick={handleLogout}
-              className="px-4 py-2 bg-primary-400 text-white rounded-lg hover:bg-primary-500 transition-colors"
+          <p className="hidden font-mono text-sm text-muted lg:block">
+            <span className="text-brand" aria-hidden="true">
+              &gt;{' '}
+            </span>
+            {sidebarItems.find(item => item.id === activeTab)?.label}
+          </p>
+
+          <div className="flex items-center gap-2">
+            <Link
+              href="/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-outline hidden sm:inline-flex"
             >
-              Logout
+              View site
+              <ExternalLink className="h-4 w-4" aria-hidden="true" />
+            </Link>
+            <ThemeToggle />
+            <button onClick={handleLogout} className="btn btn-outline">
+              <LogOut className="h-4 w-4" aria-hidden="true" />
+              Log out
             </button>
           </div>
         </header>
@@ -315,12 +337,10 @@ function OverviewTab() {
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-3xl font-bold text-text-primary">
-            Dashboard Overview
-          </h2>
+          <h2 className="text-2xl font-semibold text-fg">Dashboard Overview</h2>
         </div>
         <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary-400 border-t-transparent"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-2 border-brand border-t-transparent"></div>
         </div>
       </div>
     );
@@ -329,15 +349,13 @@ function OverviewTab() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold text-text-primary">
-          Dashboard Overview
-        </h2>
+        <h2 className="text-2xl font-semibold text-fg">Dashboard Overview</h2>
         <button
           onClick={() => {
             setLoading(true);
             fetchStats();
           }}
-          className="px-4 py-2 bg-primary-400 text-white rounded-lg hover:bg-primary-500 transition-colors"
+          className="px-4 py-2 bg-brand-solid text-brand-on rounded-md hover:bg-brand-solid/90 transition-colors"
         >
           Refresh Data
         </button>
@@ -345,92 +363,80 @@ function OverviewTab() {
 
       {/* Stats cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-background-secondary rounded-xl p-6 border border-border-primary">
+        <div className="bg-surface rounded-lg p-6 border border-line">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-text-secondary text-sm">Total Projects</p>
-              <p className="text-2xl font-bold text-text-primary">
-                {stats.projects}
-              </p>
-              <p className="text-primary-400 text-sm mt-1">
+              <p className="text-muted text-sm">Total Projects</p>
+              <p className="text-2xl font-bold text-fg">{stats.projects}</p>
+              <p className="text-brand text-sm mt-1">
                 {stats.featuredProjects} featured
               </p>
             </div>
-            <div className="p-3 bg-primary-400/20 rounded-lg">
-              <FolderOpen className="h-6 w-6 text-primary-400" />
+            <div className="p-3 bg-brand/20 rounded-md">
+              <FolderOpen className="h-6 w-6 text-brand" />
             </div>
           </div>
         </div>
 
-        <div className="bg-background-secondary rounded-xl p-6 border border-border-primary">
+        <div className="bg-surface rounded-lg p-6 border border-line">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-text-secondary text-sm">Skills</p>
-              <p className="text-2xl font-bold text-text-primary">
-                {stats.skills}
-              </p>
-              <p className="text-green-400 text-sm mt-1">Across categories</p>
+              <p className="text-muted text-sm">Skills</p>
+              <p className="text-2xl font-bold text-fg">{stats.skills}</p>
+              <p className="text-brand text-sm mt-1">Across categories</p>
             </div>
-            <div className="p-3 bg-primary-400/20 rounded-lg">
-              <Code className="h-6 w-6 text-primary-400" />
+            <div className="p-3 bg-brand/20 rounded-md">
+              <Code className="h-6 w-6 text-brand" />
             </div>
           </div>
         </div>
 
-        <div className="bg-background-secondary rounded-xl p-6 border border-border-primary">
+        <div className="bg-surface rounded-lg p-6 border border-line">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-text-secondary text-sm">Experience</p>
-              <p className="text-2xl font-bold text-text-primary">
-                {stats.experience}
-              </p>
+              <p className="text-muted text-sm">Experience</p>
+              <p className="text-2xl font-bold text-fg">{stats.experience}</p>
               <p className="text-orange-400 text-sm mt-1">Work positions</p>
             </div>
-            <div className="p-3 bg-primary-400/20 rounded-lg">
-              <Briefcase className="h-6 w-6 text-primary-400" />
+            <div className="p-3 bg-brand/20 rounded-md">
+              <Briefcase className="h-6 w-6 text-brand" />
             </div>
           </div>
         </div>
 
-        <div className="bg-background-secondary rounded-xl p-6 border border-border-primary">
+        <div className="bg-surface rounded-lg p-6 border border-line">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-text-secondary text-sm">Messages</p>
-              <p className="text-2xl font-bold text-text-primary">
-                {stats.contacts}
-              </p>
-              <p className="text-red-400 text-sm mt-1">
+              <p className="text-muted text-sm">Messages</p>
+              <p className="text-2xl font-bold text-fg">{stats.contacts}</p>
+              <p className="text-danger text-sm mt-1">
                 {stats.unreadMessages} unread
               </p>
             </div>
-            <div className="p-3 bg-primary-400/20 rounded-lg">
-              <Mail className="h-6 w-6 text-primary-400" />
+            <div className="p-3 bg-brand/20 rounded-md">
+              <Mail className="h-6 w-6 text-brand" />
             </div>
           </div>
         </div>
       </div>
 
       {/* Recent activity */}
-      <div className="bg-background-secondary rounded-xl p-6 border border-border-primary">
-        <h3 className="text-xl font-semibold text-text-primary mb-4">
-          Recent Activity
-        </h3>
+      <div className="bg-surface rounded-lg p-6 border border-line">
+        <h3 className="text-xl font-semibold text-fg mb-4">Recent Activity</h3>
         <div className="space-y-3">
           {recentActivity.length > 0 ? (
             recentActivity.map(activity => (
               <div key={activity.id} className="flex items-center space-x-3">
-                <div className="w-2 h-2 bg-primary-400 rounded-full"></div>
-                <p className="text-text-secondary">{activity.message}</p>
-                <span className="text-text-secondary text-sm">
-                  {activity.timestamp}
-                </span>
+                <div className="w-2 h-2 bg-brand-solid rounded-full"></div>
+                <p className="text-muted">{activity.message}</p>
+                <span className="text-muted text-sm">{activity.timestamp}</span>
               </div>
             ))
           ) : (
             <div className="flex items-center space-x-3">
               <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
-              <p className="text-text-secondary">No activity data available</p>
-              <span className="text-text-secondary text-sm">Just now</span>
+              <p className="text-muted">No activity data available</p>
+              <span className="text-muted text-sm">Just now</span>
             </div>
           )}
         </div>

@@ -30,13 +30,13 @@ function NotificationItem({ notification, onRemove }: NotificationProps) {
   const getIcon = () => {
     switch (notification.type) {
       case 'success':
-        return <CheckCircle className="h-5 w-5 text-green-400" />;
+        return <CheckCircle className="h-5 w-5 text-brand" />;
       case 'error':
-        return <XCircle className="h-5 w-5 text-red-400" />;
+        return <XCircle className="h-5 w-5 text-danger" />;
       case 'info':
-        return <Info className="h-5 w-5 text-primary-400" />;
+        return <Info className="h-5 w-5 text-brand" />;
       default:
-        return <Info className="h-5 w-5 text-primary-400" />;
+        return <Info className="h-5 w-5 text-brand" />;
     }
   };
 
@@ -47,28 +47,28 @@ function NotificationItem({ notification, onRemove }: NotificationProps) {
       case 'error':
         return 'bg-red-500/20 border-red-500/50';
       case 'info':
-        return 'bg-primary-500/20 border-primary-500/50';
+        return 'bg-brand/20 border-brand/50';
       default:
-        return 'bg-primary-500/20 border-primary-500/50';
+        return 'bg-brand/20 border-brand/50';
     }
   };
 
   const getTextColor = () => {
     switch (notification.type) {
       case 'success':
-        return 'text-green-400';
+        return 'text-brand';
       case 'error':
-        return 'text-red-400';
+        return 'text-danger';
       case 'info':
-        return 'text-primary-400';
+        return 'text-brand';
       default:
-        return 'text-primary-400';
+        return 'text-brand';
     }
   };
 
   return (
     <div
-      className={`${getBgColor()} border rounded-lg p-4 mb-3 animate-slide-down`}
+      className={`${getBgColor()} border rounded-md p-4 mb-3 animate-slide-down`}
     >
       <div className="flex items-start space-x-3">
         {getIcon()}
@@ -76,13 +76,11 @@ function NotificationItem({ notification, onRemove }: NotificationProps) {
           <h4 className={`font-semibold ${getTextColor()}`}>
             {notification.title}
           </h4>
-          <p className="text-text-secondary text-sm mt-1">
-            {notification.message}
-          </p>
+          <p className="text-muted text-sm mt-1">{notification.message}</p>
         </div>
         <button
           onClick={() => onRemove(notification.id)}
-          className="text-text-secondary hover:text-text-primary transition-colors"
+          className="text-muted hover:text-fg transition-colors"
         >
           <X className="h-4 w-4" />
         </button>

@@ -38,19 +38,19 @@ export class ErrorBoundary extends Component<
       }
 
       return (
-        <div className="min-h-screen flex items-center justify-center bg-background-primary">
+        <div className="min-h-screen flex items-center justify-center bg-bg">
           <div className="text-center p-8 max-w-md mx-auto">
-            <AlertTriangle className="h-16 w-16 text-red-500 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-text-primary mb-2">
+            <AlertTriangle className="h-16 w-16 text-danger mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-fg mb-2">
               Something went wrong
             </h2>
-            <p className="text-text-secondary mb-6">
+            <p className="text-muted mb-6">
               We're sorry, but something unexpected happened. Please try
               refreshing the page.
             </p>
             <button
               onClick={() => window.location.reload()}
-              className="flex items-center mx-auto px-4 py-2 bg-primary-400 text-white rounded-lg hover:bg-primary-500 transition-colors"
+              className="flex items-center mx-auto px-4 py-2 bg-brand-solid text-brand-on rounded-md hover:bg-brand-solid/90 transition-colors"
             >
               <RefreshCw className="h-4 w-4 mr-2" />
               Refresh Page
@@ -80,7 +80,7 @@ export function LoadingSpinner({
 
   return (
     <div
-      className={`animate-spin rounded-full border-2 border-primary-400 border-t-transparent ${sizeClasses[size]} ${className}`}
+      className={`animate-spin rounded-full border-2 border-brand border-t-transparent ${sizeClasses[size]} ${className}`}
     />
   );
 }
@@ -88,12 +88,12 @@ export function LoadingSpinner({
 export function LoadingCard({ className = '' }: { className?: string }) {
   return (
     <div
-      className={`bg-background-secondary rounded-xl border border-border-primary p-6 animate-pulse ${className}`}
+      className={`bg-surface rounded-lg border border-line p-6 animate-pulse ${className}`}
     >
       <div className="space-y-4">
-        <div className="h-4 bg-background-primary rounded w-3/4"></div>
-        <div className="h-4 bg-background-primary rounded w-1/2"></div>
-        <div className="h-4 bg-background-primary rounded w-5/6"></div>
+        <div className="h-4 bg-bg rounded w-3/4"></div>
+        <div className="h-4 bg-bg rounded w-1/2"></div>
+        <div className="h-4 bg-bg rounded w-5/6"></div>
       </div>
     </div>
   );
@@ -122,8 +122,8 @@ export function LoadingSection({ className = '' }: { className?: string }) {
     <section className={`py-16 ${className}`}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <div className="h-8 bg-background-primary rounded w-1/3 mx-auto mb-4 animate-pulse"></div>
-          <div className="h-4 bg-background-primary rounded w-1/2 mx-auto animate-pulse"></div>
+          <div className="h-8 bg-bg rounded w-1/3 mx-auto mb-4 animate-pulse"></div>
+          <div className="h-4 bg-bg rounded w-1/2 mx-auto animate-pulse"></div>
         </div>
         <LoadingGrid />
       </div>

@@ -73,8 +73,8 @@ export default function ImageGallery({
         title: 'Invalid File Type!',
         text: 'Please select an image file.',
         icon: 'error',
-        color: '#e2e8f0',
-        background: '#1e293b',
+        color: 'rgb(var(--fg))',
+        background: 'rgb(var(--surface))',
         confirmButtonColor: '#ef4444',
       });
       return;
@@ -86,8 +86,8 @@ export default function ImageGallery({
         title: 'File Too Large!',
         text: 'Please select an image smaller than 4MB.',
         icon: 'error',
-        color: '#e2e8f0',
-        background: '#1e293b',
+        color: 'rgb(var(--fg))',
+        background: 'rgb(var(--surface))',
         confirmButtonColor: '#ef4444',
       });
       return;
@@ -113,9 +113,9 @@ export default function ImageGallery({
           icon: 'success',
           timer: 2000,
           showConfirmButton: false,
-          color: '#e2e8f0',
-          background: '#1e293b',
-          confirmButtonColor: '#3b82f6',
+          color: 'rgb(var(--fg))',
+          background: 'rgb(var(--surface))',
+          confirmButtonColor: '#15803d',
         });
 
         // Add new image to the list
@@ -134,8 +134,8 @@ export default function ImageGallery({
         title: 'Upload Failed!',
         text: error instanceof Error ? error.message : 'Failed to upload image',
         icon: 'error',
-        color: '#e2e8f0',
-        background: '#1e293b',
+        color: 'rgb(var(--fg))',
+        background: 'rgb(var(--surface))',
         confirmButtonColor: '#ef4444',
       });
     } finally {
@@ -155,8 +155,8 @@ export default function ImageGallery({
       cancelButtonColor: '#6b7280',
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'Cancel',
-      color: '#e2e8f0',
-      background: '#1e293b',
+      color: 'rgb(var(--fg))',
+      background: 'rgb(var(--surface))',
     });
 
     if (!result.isConfirmed) return;
@@ -175,9 +175,9 @@ export default function ImageGallery({
           icon: 'success',
           timer: 2000,
           showConfirmButton: false,
-          color: '#e2e8f0',
-          background: '#1e293b',
-          confirmButtonColor: '#3b82f6',
+          color: 'rgb(var(--fg))',
+          background: 'rgb(var(--surface))',
+          confirmButtonColor: '#15803d',
         });
 
         // Remove image from list
@@ -196,8 +196,8 @@ export default function ImageGallery({
         title: 'Delete Failed!',
         text: error instanceof Error ? error.message : 'Failed to delete image',
         icon: 'error',
-        color: '#e2e8f0',
-        background: '#1e293b',
+        color: 'rgb(var(--fg))',
+        background: 'rgb(var(--surface))',
         confirmButtonColor: '#ef4444',
       });
     }
@@ -241,9 +241,9 @@ export default function ImageGallery({
         icon: 'success',
         timer: 2000,
         showConfirmButton: false,
-        color: '#e2e8f0',
-        background: '#1e293b',
-        confirmButtonColor: '#3b82f6',
+        color: 'rgb(var(--fg))',
+        background: 'rgb(var(--surface))',
+        confirmButtonColor: '#15803d',
       });
     } catch (error) {
       logger.error('Download error:', error);
@@ -251,8 +251,8 @@ export default function ImageGallery({
         title: 'Download Failed!',
         text: 'Failed to download image',
         icon: 'error',
-        color: '#e2e8f0',
-        background: '#1e293b',
+        color: 'rgb(var(--fg))',
+        background: 'rgb(var(--surface))',
         confirmButtonColor: '#ef4444',
       });
     }
@@ -261,7 +261,7 @@ export default function ImageGallery({
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary-400 border-t-transparent"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-brand border-t-transparent"></div>
       </div>
     );
   }
@@ -270,8 +270,8 @@ export default function ImageGallery({
     <div className="space-y-6">
       {/* Upload Section */}
       {showUpload && (
-        <div className="bg-background-secondary rounded-xl p-6 border border-border-primary">
-          <h3 className="text-lg font-semibold text-text-primary mb-4">
+        <div className="bg-surface rounded-lg p-6 border border-line">
+          <h3 className="text-lg font-semibold text-fg mb-4">
             Upload New Image
           </h3>
           <div className="flex items-center space-x-4">
@@ -284,21 +284,17 @@ export default function ImageGallery({
                 className="hidden"
                 id="image-upload"
               />
-              <div className="flex items-center justify-center w-full h-32 border-2 border-dashed border-border-primary rounded-lg hover:border-primary-400 transition-colors cursor-pointer">
+              <div className="flex items-center justify-center w-full h-32 border-2 border-dashed border-line rounded-md hover:border-brand transition-colors cursor-pointer">
                 {uploading ? (
                   <div className="flex flex-col items-center">
-                    <div className="animate-spin rounded-full h-6 w-6 border-2 border-primary-400 border-t-transparent mb-2"></div>
-                    <span className="text-text-secondary">Uploading...</span>
+                    <div className="animate-spin rounded-full h-6 w-6 border-2 border-brand border-t-transparent mb-2"></div>
+                    <span className="text-muted">Uploading...</span>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center">
-                    <Upload className="h-8 w-8 text-text-secondary mb-2" />
-                    <span className="text-text-secondary">
-                      Click to upload image
-                    </span>
-                    <span className="text-xs text-text-secondary mt-1">
-                      Max 4MB
-                    </span>
+                    <Upload className="h-8 w-8 text-muted mb-2" />
+                    <span className="text-muted">Click to upload image</span>
+                    <span className="text-xs text-muted mt-1">Max 4MB</span>
                   </div>
                 )}
               </div>
@@ -308,15 +304,15 @@ export default function ImageGallery({
       )}
 
       {/* Images Grid */}
-      <div className="bg-background-secondary rounded-xl p-6 border border-border-primary">
-        <h3 className="text-lg font-semibold text-text-primary mb-4">
+      <div className="bg-surface rounded-lg p-6 border border-line">
+        <h3 className="text-lg font-semibold text-fg mb-4">
           Images ({images.length})
         </h3>
 
         {images.length === 0 ? (
           <div className="text-center py-12">
-            <div className="text-text-secondary mb-2">No images found</div>
-            <div className="text-sm text-text-secondary">
+            <div className="text-muted mb-2">No images found</div>
+            <div className="text-sm text-muted">
               Upload your first image to get started
             </div>
           </div>
@@ -324,7 +320,7 @@ export default function ImageGallery({
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {images.map(image => (
               <div key={image.public_id} className="group relative">
-                <div className="aspect-square bg-background-primary rounded-lg overflow-hidden border border-border-primary">
+                <div className="aspect-square bg-bg rounded-md overflow-hidden border border-line">
                   <img
                     src={image.secure_url}
                     alt={image.public_id}
@@ -335,21 +331,21 @@ export default function ImageGallery({
                   <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center space-x-2">
                     <button
                       onClick={() => setSelectedImage(image)}
-                      className="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors"
+                      className="p-2 bg-white/20 rounded-md hover:bg-white/30 transition-colors"
                     >
                       <Eye className="h-4 w-4 text-white" />
                     </button>
                     {showDelete && (
                       <button
                         onClick={() => handleDeleteImage(image.public_id)}
-                        className="p-2 bg-red-500/20 rounded-lg hover:bg-red-500/30 transition-colors"
+                        className="p-2 bg-red-500/20 rounded-md hover:bg-red-500/30 transition-colors"
                       >
                         <Trash2 className="h-4 w-4 text-white" />
                       </button>
                     )}
                     <button
                       onClick={() => handleDownloadImage(image)}
-                      className="p-2 bg-primary-400/20 rounded-lg hover:bg-primary-400/30 transition-colors"
+                      className="p-2 bg-brand/20 rounded-md hover:bg-brand/30 transition-colors"
                     >
                       <Download className="h-4 w-4 text-white" />
                     </button>
@@ -357,7 +353,7 @@ export default function ImageGallery({
                 </div>
 
                 {/* Image Info */}
-                <div className="mt-2 text-xs text-text-secondary">
+                <div className="mt-2 text-xs text-muted">
                   <div>
                     {image.width} × {image.height}
                   </div>
@@ -372,24 +368,22 @@ export default function ImageGallery({
       {/* Image Preview Modal */}
       {selectedImage && (
         <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-          <div className="bg-background-secondary rounded-xl max-w-4xl max-h-[90vh] overflow-hidden">
-            <div className="flex items-center justify-between p-4 border-b border-border-primary">
-              <h3 className="text-lg font-semibold text-text-primary">
-                Image Preview
-              </h3>
+          <div className="bg-surface rounded-lg max-w-4xl max-h-[90vh] overflow-hidden">
+            <div className="flex items-center justify-between p-4 border-b border-line">
+              <h3 className="text-lg font-semibold text-fg">Image Preview</h3>
               <div className="flex items-center space-x-2">
                 <button
                   onClick={() => handleDownloadImage(selectedImage)}
-                  className="flex items-center px-3 py-2 bg-primary-400 text-white rounded-lg hover:bg-primary-500 transition-colors"
+                  className="flex items-center px-3 py-2 bg-brand-solid text-brand-on rounded-md hover:bg-brand-solid/90 transition-colors"
                 >
                   <Download className="h-4 w-4 mr-2" />
                   Download
                 </button>
                 <button
                   onClick={() => setSelectedImage(null)}
-                  className="p-2 hover:bg-background-primary rounded-lg transition-colors"
+                  className="p-2 hover:bg-bg rounded-md transition-colors"
                 >
-                  <X className="h-5 w-5 text-text-secondary" />
+                  <X className="h-5 w-5 text-muted" />
                 </button>
               </div>
             </div>
@@ -399,7 +393,7 @@ export default function ImageGallery({
                 alt={selectedImage.public_id}
                 className="max-w-full max-h-[70vh] object-contain mx-auto"
               />
-              <div className="mt-4 text-sm text-text-secondary text-center">
+              <div className="mt-4 text-sm text-muted text-center">
                 <div>
                   {selectedImage.width} × {selectedImage.height}
                 </div>

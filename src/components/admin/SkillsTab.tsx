@@ -119,9 +119,9 @@ export default function SkillsTab() {
           icon: 'success',
           timer: 2000,
           showConfirmButton: false,
-          color: '#e2e8f0',
-          background: '#1e293b',
-          confirmButtonColor: '#3b82f6',
+          color: 'rgb(var(--fg))',
+          background: 'rgb(var(--surface))',
+          confirmButtonColor: '#15803d',
         });
       } else {
         const errorData = await response.json();
@@ -129,8 +129,8 @@ export default function SkillsTab() {
           title: 'Error!',
           text: errorData.error || 'An error occurred',
           icon: 'error',
-          color: '#e2e8f0',
-          background: '#1e293b',
+          color: 'rgb(var(--fg))',
+          background: 'rgb(var(--surface))',
           confirmButtonColor: '#ef4444',
         });
       }
@@ -139,8 +139,8 @@ export default function SkillsTab() {
         title: 'Error!',
         text: 'Network error occurred',
         icon: 'error',
-        color: '#e2e8f0',
-        background: '#1e293b',
+        color: 'rgb(var(--fg))',
+        background: 'rgb(var(--surface))',
         confirmButtonColor: '#ef4444',
       });
     } finally {
@@ -158,8 +158,8 @@ export default function SkillsTab() {
       cancelButtonColor: '#6b7280',
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'Cancel',
-      color: '#e2e8f0',
-      background: '#1e293b',
+      color: 'rgb(var(--fg))',
+      background: 'rgb(var(--surface))',
     });
 
     if (!result.isConfirmed) return;
@@ -177,9 +177,9 @@ export default function SkillsTab() {
           icon: 'success',
           timer: 2000,
           showConfirmButton: false,
-          color: '#e2e8f0',
-          background: '#1e293b',
-          confirmButtonColor: '#3b82f6',
+          color: 'rgb(var(--fg))',
+          background: 'rgb(var(--surface))',
+          confirmButtonColor: '#15803d',
         });
       }
     } catch (error) {
@@ -188,8 +188,8 @@ export default function SkillsTab() {
         title: 'Error!',
         text: 'Failed to delete skill.',
         icon: 'error',
-        color: '#e2e8f0',
-        background: '#1e293b',
+        color: 'rgb(var(--fg))',
+        background: 'rgb(var(--surface))',
         confirmButtonColor: '#ef4444',
       });
     }
@@ -297,7 +297,7 @@ export default function SkillsTab() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin text-primary-400" />
+        <Loader2 className="h-8 w-8 animate-spin text-brand" />
       </div>
     );
   }
@@ -306,12 +306,10 @@ export default function SkillsTab() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold text-text-primary">
-          Skills Management
-        </h2>
+        <h2 className="text-2xl font-semibold text-fg">Skills Management</h2>
         <button
           onClick={() => setShowForm(true)}
-          className="flex items-center px-4 py-2 bg-primary-400 text-white rounded-lg hover:bg-primary-500 transition-colors"
+          className="flex items-center px-4 py-2 bg-brand-solid text-brand-on rounded-md hover:bg-brand-solid/90 transition-colors"
         >
           <Plus className="h-4 w-4 mr-2" />
           Add New Skill
@@ -321,19 +319,19 @@ export default function SkillsTab() {
       {/* Search and Filter */}
       <div className="flex items-center space-x-4">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-text-secondary" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted" />
           <input
             type="text"
             placeholder="Search skills..."
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-background-primary border border-border-primary rounded-lg text-text-primary focus:ring-2 focus:ring-primary-400 focus:border-transparent"
+            className="w-full pl-10 pr-4 py-2 bg-bg border border-line rounded-md text-fg focus:ring-2 focus:ring-brand focus:border-transparent"
           />
         </div>
         <select
           value={selectedCategory}
           onChange={e => setSelectedCategory(e.target.value)}
-          className="px-4 py-2 bg-background-primary border border-border-primary rounded-lg text-text-primary focus:ring-2 focus:ring-primary-400 focus:border-transparent"
+          className="px-4 py-2 bg-bg border border-line rounded-md text-fg focus:ring-2 focus:ring-brand focus:border-transparent"
         >
           <option value="All">All Categories</option>
           {skillCategories.map(category => (
@@ -349,11 +347,9 @@ export default function SkillsTab() {
         {Object.entries(groupedSkills).map(([category, categorySkills]) => (
           <div
             key={category}
-            className="bg-background-secondary rounded-xl border border-border-primary p-6"
+            className="bg-surface rounded-lg border border-line p-6"
           >
-            <h3 className="text-xl font-semibold text-text-primary mb-4">
-              {category}
-            </h3>
+            <h3 className="text-xl font-semibold text-fg mb-4">{category}</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {categorySkills
                 .sort((a, b) => a.order - b.order)
@@ -364,11 +360,11 @@ export default function SkillsTab() {
                     onDragStart={e => handleDragStart(e, skill.id)}
                     onDragOver={handleDragOver}
                     onDrop={e => handleDrop(e, skill.id)}
-                    className="bg-background-primary rounded-lg border border-border-primary p-4 hover:shadow-md transition-shadow cursor-move"
+                    className="bg-bg rounded-md border border-line p-4 hover:shadow-md transition-shadow cursor-move"
                   >
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center space-x-3">
-                        <GripVertical className="h-4 w-4 text-text-secondary" />
+                        <GripVertical className="h-4 w-4 text-muted" />
                         {skill.iconUrl && (
                           <img
                             src={skill.iconUrl}
@@ -376,20 +372,20 @@ export default function SkillsTab() {
                             className="h-6 w-6"
                           />
                         )}
-                        <span className="font-medium text-text-primary">
+                        <span className="font-medium text-fg">
                           {skill.name}
                         </span>
                       </div>
                       <div className="flex items-center space-x-1">
                         <button
                           onClick={() => handleEdit(skill)}
-                          className="p-1 text-primary-400 hover:text-primary-300 transition-colors"
+                          className="p-1 text-brand hover:text-brand transition-colors"
                         >
                           <Edit className="h-3 w-3" />
                         </button>
                         <button
                           onClick={() => handleDelete(skill.id)}
-                          className="p-1 text-red-400 hover:text-red-300 transition-colors"
+                          className="p-1 text-danger hover:text-red-300 transition-colors"
                         >
                           <Trash2 className="h-3 w-3" />
                         </button>
@@ -398,19 +394,17 @@ export default function SkillsTab() {
 
                     <div className="space-y-2">
                       <div className="flex justify-between items-center">
-                        <span className="text-xs text-text-secondary">
-                          Proficiency
-                        </span>
-                        <span className="text-xs text-primary-400 font-medium">
+                        <span className="text-xs text-muted">Proficiency</span>
+                        <span className="text-xs text-brand font-medium">
                           {
                             skillLevels.find(l => l.value === skill.level)
                               ?.label
                           }
                         </span>
                       </div>
-                      <div className="h-2 bg-background-secondary rounded-full overflow-hidden">
+                      <div className="h-2 bg-surface rounded-full overflow-hidden">
                         <div
-                          className="h-2 bg-primary-400 rounded-full transition-all duration-300"
+                          className="h-2 bg-brand-solid rounded-full transition-all duration-300"
                           style={{ width: `${(skill.level / 5) * 100}%` }}
                         />
                       </div>
@@ -424,29 +418,26 @@ export default function SkillsTab() {
 
       {Object.keys(groupedSkills).length === 0 && (
         <div className="text-center py-12">
-          <p className="text-text-secondary">No skills found</p>
+          <p className="text-muted">No skills found</p>
         </div>
       )}
 
       {/* Skill Form Modal */}
       {showForm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-background-secondary rounded-xl border border-border-primary w-full max-w-md">
-            <div className="flex items-center justify-between p-6 border-b border-border-primary">
-              <h3 className="text-xl font-semibold text-text-primary">
+          <div className="bg-surface rounded-lg border border-line w-full max-w-md">
+            <div className="flex items-center justify-between p-6 border-b border-line">
+              <h3 className="text-xl font-semibold text-fg">
                 {editingSkill ? 'Edit Skill' : 'Add New Skill'}
               </h3>
-              <button
-                onClick={resetForm}
-                className="text-text-secondary hover:text-text-primary"
-              >
+              <button onClick={resetForm} className="text-muted hover:text-fg">
                 <X className="h-6 w-6" />
               </button>
             </div>
 
             <form onSubmit={handleSubmit} className="p-6 space-y-6">
               <div>
-                <label className="block text-sm font-medium text-text-primary mb-2">
+                <label className="block text-sm font-medium text-fg mb-2">
                   Skill Name *
                 </label>
                 <input
@@ -456,12 +447,12 @@ export default function SkillsTab() {
                   onChange={e =>
                     setFormData(prev => ({ ...prev, name: e.target.value }))
                   }
-                  className="w-full px-3 py-2 bg-background-primary border border-border-primary rounded-lg text-text-primary focus:ring-2 focus:ring-primary-400 focus:border-transparent"
+                  className="w-full px-3 py-2 bg-bg border border-line rounded-md text-fg focus:ring-2 focus:ring-brand focus:border-transparent"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-text-primary mb-2">
+                <label className="block text-sm font-medium text-fg mb-2">
                   Category *
                 </label>
                 <select
@@ -470,7 +461,7 @@ export default function SkillsTab() {
                   onChange={e =>
                     setFormData(prev => ({ ...prev, category: e.target.value }))
                   }
-                  className="w-full px-3 py-2 bg-background-primary border border-border-primary rounded-lg text-text-primary focus:ring-2 focus:ring-primary-400 focus:border-transparent"
+                  className="w-full px-3 py-2 bg-bg border border-line rounded-md text-fg focus:ring-2 focus:ring-brand focus:border-transparent"
                 >
                   {skillCategories.map(category => (
                     <option key={category} value={category}>
@@ -481,7 +472,7 @@ export default function SkillsTab() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-text-primary mb-2">
+                <label className="block text-sm font-medium text-fg mb-2">
                   Proficiency Level *
                 </label>
                 <select
@@ -493,7 +484,7 @@ export default function SkillsTab() {
                       level: parseInt(e.target.value),
                     }))
                   }
-                  className="w-full px-3 py-2 bg-background-primary border border-border-primary rounded-lg text-text-primary focus:ring-2 focus:ring-primary-400 focus:border-transparent"
+                  className="w-full px-3 py-2 bg-bg border border-line rounded-md text-fg focus:ring-2 focus:ring-brand focus:border-transparent"
                 >
                   {skillLevels.map(level => (
                     <option key={level.value} value={level.value}>
@@ -504,7 +495,7 @@ export default function SkillsTab() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-text-primary mb-2">
+                <label className="block text-sm font-medium text-fg mb-2">
                   Icon URL
                 </label>
                 <input
@@ -513,22 +504,22 @@ export default function SkillsTab() {
                   onChange={e =>
                     setFormData(prev => ({ ...prev, iconUrl: e.target.value }))
                   }
-                  className="w-full px-3 py-2 bg-background-primary border border-border-primary rounded-lg text-text-primary focus:ring-2 focus:ring-primary-400 focus:border-transparent"
+                  className="w-full px-3 py-2 bg-bg border border-line rounded-md text-fg focus:ring-2 focus:ring-brand focus:border-transparent"
                 />
               </div>
 
-              <div className="flex items-center justify-end space-x-3 pt-6 border-t border-border-primary">
+              <div className="flex items-center justify-end space-x-3 pt-6 border-t border-line">
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="px-4 py-2 bg-background-primary border border-border-primary text-text-primary rounded-lg hover:bg-background-secondary transition-colors"
+                  className="px-4 py-2 bg-bg border border-line text-fg rounded-md hover:bg-surface transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={formLoading}
-                  className="flex items-center px-4 py-2 bg-primary-400 text-white rounded-lg hover:bg-primary-500 transition-colors disabled:opacity-50"
+                  className="flex items-center px-4 py-2 bg-brand-solid text-brand-on rounded-md hover:bg-brand-solid/90 transition-colors disabled:opacity-50"
                 >
                   {formLoading && (
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
