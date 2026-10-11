@@ -1,141 +1,128 @@
-'use client';
+import type { CSSProperties } from 'react';
+import type { Project } from '@prisma/client';
+import { ArrowUpRight, Github } from 'lucide-react';
+import { SectionHeading } from '@/components/ui/SectionHeading';
+import { SmartImage } from '@/components/ui/SmartImage';
 
-import { useState, useEffect } from 'react';
-import logger from '@/lib/logger';
-import { ExternalLink, Github, Calendar } from 'lucide-react';
-
-type Project = {
-  id: string;
-  title: string;
-  slug: string;
-  description: string;
-  imageUrl: string;
-  link?: string | null;
-  githubUrl?: string | null;
-  technologies: string;
-  featured: boolean;
-};
-
-export function ProjectsSection() {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const res = await fetch('/api/projects?limit=6', { cache: 'no-store' });
-        if (res.ok) {
-          const json = await res.json();
-          setProjects(json?.data ?? []);
-        }
-      } catch (error) {
-        logger.error('Error fetching projects:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProjects();
-  }, []);
-
-  if (loading) {
-    return (
-      <section id="projects" className="py-20 bg-background-primary">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-6xl mx-auto text-center">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary-400 mx-auto mb-4"></div>
-            <p className="text-text-secondary">Loading projects...</p>
-          </div>
-        </div>
-      </section>
-    );
-  }
+function ProjectCard({ project }: { project: Project }) {
+  const tags = project.technologies
+    .split(',')
+    .map(tag => tag.trim())
+    .filter(Boolean);
+  const primaryUrl = project.link || project.githubUrl;
 
   return (
-    <section id="projects" className="py-20 bg-background-primary">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center mb-16">
-          <div className="inline-block">
-            <h2 className="text-4xl md:text-5xl font-bold text-text-primary mb-4">
-              Featured Projects
-            </h2>
-            <div className="h-1 w-24 bg-primary-400 mx-auto rounded-full"></div>
+    <article className="panel group flex h-full flex-col overflow-hidden transition-[transform,border-color] duration-300 ease-out hover:-translate-y-1 hover:border-brand/60 focus-within:border-brand/60">
+      <div className="relative aspect-video overflow-hidden border-b border-line bg-surface-2">
+        <SmartImage
+          src={project.imageUrl}
+          alt={`Screenshot of ${project.title}`}
+          sizes="(min-width: 1024px) 360px, (min-width: 768px) 50vw, 100vw"
+          className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+        />
+
+        {project.featured && (
+          <span className="absolute left-3 top-3 rounded border border-term-line bg-term-bg px-2 py-1 font-mono text-xs text-term-accent">
+            Featured
+          </span>
+        )}
+
+        {/* Hover reveal for pointer devices; the same links are always in the card footer */}
+        {primaryUrl && (
+          <a
+            href={primaryUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            tabIndex={-1}
+            aria-hidden="true"
+            className="absolute inset-0 flex items-end bg-gradient-to-t from-term-bg via-term-bg/60 to-transparent p-4 opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100"
+          >
+            <span className="inline-flex translate-y-2 items-center gap-1 font-mono text-sm text-term-fg transition-transform duration-300 ease-out group-hover:translate-y-0">
+              {project.link ? 'Open live site' : 'View source'}
+              <ArrowUpRight className="h-4 w-4 text-term-accent" />
+            </span>
+          </a>
+        )}
+      </div>
+
+      <div className="flex flex-1 flex-col p-6">
+        <h3 className="font-mono text-lg font-semibold text-fg">
+          {project.title}
+        </h3>
+        <p className="mt-2 line-clamp-3 leading-relaxed text-muted">
+          {project.description}
+        </p>
+
+        {tags.length > 0 && (
+          <ul className="mt-4 flex flex-wrap gap-2" aria-label="Technologies">
+            {tags.map(tag => (
+              <li key={tag} className="chip">
+                {tag}
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {(project.link || project.githubUrl) && (
+          <div className="mt-auto flex flex-wrap gap-3 pt-6">
+            {project.link && (
+              <a
+                href={project.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-accent flex-1"
+                aria-label={`Live site for ${project.title} (opens in a new tab)`}
+              >
+                Live site
+                <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+              </a>
+            )}
+            {project.githubUrl && (
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-outline flex-1"
+                aria-label={`Source code for ${project.title} on GitHub (opens in a new tab)`}
+              >
+                <Github className="h-4 w-4" aria-hidden="true" />
+                Code
+              </a>
+            )}
           </div>
-          <p className="text-xl text-text-secondary max-w-2xl mx-auto mt-6">
-            Here are some of my recent projects that showcase my skills and
-            experience
-          </p>
-        </div>
+        )}
+      </div>
+    </article>
+  );
+}
+
+export function ProjectsSection({ projects }: { projects: Project[] }) {
+  return (
+    <section id="projects" className="section border-t border-line">
+      <div className="wrap">
+        <SectionHeading
+          index="03"
+          label="projects"
+          title="Selected projects"
+          description="Products I have designed, built and shipped."
+        />
 
         {projects.length === 0 ? (
-          <div className="text-center py-20">
-            <div className="bg-background-secondary rounded-2xl p-8 max-w-md mx-auto border border-border-primary">
-              <p className="text-lg text-text-secondary">No projects yet.</p>
-            </div>
-          </div>
+          <p className="panel p-6 text-muted">
+            Projects will be listed here soon.
+          </p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {projects.map(p => (
-              <article
-                key={p.id}
-                className="group bg-background-secondary rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-border-primary hover:border-primary-400 hover:-translate-y-2"
+          <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {projects.map((project, i) => (
+              <li
+                key={project.id}
+                data-reveal
+                style={{ '--i': i % 3 } as CSSProperties}
               >
-                <div className="aspect-video bg-background-primary flex items-center justify-center overflow-hidden relative">
-                  <img
-                    src={p.imageUrl}
-                    alt={p.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    onError={e => {
-                      e.currentTarget.src =
-                        'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=600&fit=crop';
-                    }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold text-text-primary mb-3 group-hover:text-primary-400 transition-colors">
-                    {p.title}
-                  </h3>
-                  <p className="text-text-secondary mb-4 line-clamp-3 leading-relaxed">
-                    {p.description}
-                  </p>
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {p.technologies
-                      .split(',')
-                      .slice(0, 5)
-                      .map(t => (
-                        <span
-                          key={t.trim()}
-                          className="px-3 py-1.5 bg-background-primary text-text-secondary text-sm rounded-full font-medium border border-border-primary"
-                        >
-                          {t.trim()}
-                        </span>
-                      ))}
-                  </div>
-                  <div className="flex gap-3">
-                    {p.link && (
-                      <a
-                        href={p.link}
-                        target="_blank"
-                        className="flex-1 bg-primary-400 text-white text-center py-3 px-4 rounded-xl hover:bg-primary-500 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-primary-400/25 font-medium"
-                      >
-                        Live Demo
-                      </a>
-                    )}
-                    {p.githubUrl && (
-                      <a
-                        href={p.githubUrl}
-                        target="_blank"
-                        className="flex-1 bg-background-primary text-text-primary text-center py-3 px-4 rounded-xl border border-border-primary hover:border-primary-400 transition-all duration-300 transform hover:scale-105 shadow-lg font-medium"
-                      >
-                        GitHub
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </article>
+                <ProjectCard project={project} />
+              </li>
             ))}
-          </div>
+          </ul>
         )}
       </div>
     </section>

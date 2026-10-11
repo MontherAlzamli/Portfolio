@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import logger from '@/lib/logger';
 import { requireAdmin } from '@/lib/requireAdmin';
+import { revalidatePath } from 'next/cache';
 
 export const dynamic = 'force-dynamic';
 
@@ -67,6 +68,8 @@ export async function PUT(request: NextRequest) {
         },
       });
     }
+
+    revalidatePath('/');
 
     return NextResponse.json({
       success: true,

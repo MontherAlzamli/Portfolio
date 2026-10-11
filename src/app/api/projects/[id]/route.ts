@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { requireAdmin } from '@/lib/requireAdmin';
+import { revalidatePath } from 'next/cache';
 
 // Helper function to generate slug
 const generateSlug = (title: string) => {
@@ -115,6 +116,8 @@ export async function PUT(
       },
     });
 
+    revalidatePath('/');
+
     return NextResponse.json({
       success: true,
       data: updatedProject,
@@ -160,6 +163,8 @@ export async function DELETE(
     await prisma.project.delete({
       where: { id: params.id },
     });
+
+    revalidatePath('/');
 
     return NextResponse.json({
       success: true,

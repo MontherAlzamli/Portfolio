@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import logger from '@/lib/logger';
 import { requireAdmin } from '@/lib/requireAdmin';
+import { revalidatePath } from 'next/cache';
 
 // Validation schemas
 const ExperienceSchema = z.object({
@@ -139,6 +140,8 @@ export async function POST(request: NextRequest) {
         endDate: dataWithDates.endDate,
       },
     });
+
+    revalidatePath('/');
 
     return NextResponse.json(
       {

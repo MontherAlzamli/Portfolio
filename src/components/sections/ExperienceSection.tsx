@@ -1,151 +1,95 @@
-'use client';
+import type { Experience } from '@prisma/client';
+import { SectionHeading } from '@/components/ui/SectionHeading';
 
-import { useState, useEffect } from 'react';
-import logger from '@/lib/logger';
-import { Calendar, MapPin, Briefcase } from 'lucide-react';
+const monthYear = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
 
-type Experience = {
-  id: string;
-  company: string;
-  role: string;
-  startDate: string;
-  endDate?: string | null;
-  description: string;
-  current: boolean;
-  order: number;
-};
+const isoMonth = (date: Date) => date.toISOString().slice(0, 7);
 
-export function ExperienceSection() {
-  const [items, setItems] = useState<Experience[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchExperience = async () => {
-      try {
-        const res = await fetch('/api/experience?limit=20', {
-          cache: 'no-store',
-        });
-        if (res.ok) {
-          const json = await res.json();
-          setItems(json?.data ?? []);
-        }
-      } catch (error) {
-        logger.error('Error fetching experience:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchExperience();
-  }, []);
-
-  if (loading) {
-    return (
-      <section id="experience" className="py-20 bg-background-primary">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-6xl mx-auto text-center">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary-400 mx-auto mb-4"></div>
-            <p className="text-text-secondary">Loading experience...</p>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
+export function ExperienceSection({
+  experience,
+}: {
+  experience: Experience[];
+}) {
   return (
-    <section id="experience" className="py-20 bg-background-primary">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center mb-16">
-          <div className="inline-block">
-            <h2 className="text-4xl md:text-5xl font-bold text-text-primary mb-4">
-              Work Experience
-            </h2>
-            <div className="h-1 w-24 bg-primary-400 mx-auto rounded-full"></div>
-          </div>
-          <p className="text-xl text-text-secondary max-w-2xl mx-auto mt-6">
-            My professional journey and the experiences that shaped my career
+    <section id="experience" className="section border-t border-line">
+      <div className="wrap">
+        <SectionHeading
+          index="04"
+          label="experience"
+          title="Work experience"
+          description="Where I have worked and what I did there."
+        />
+
+        {experience.length === 0 ? (
+          <p className="panel p-6 text-muted">
+            Experience will be listed here soon.
           </p>
-        </div>
-
-        {items.length === 0 ? (
-          <div className="text-center py-20">
-            <div className="bg-background-secondary rounded-2xl p-8 max-w-md mx-auto border border-border-primary">
-              <p className="text-lg text-text-secondary">No experience yet.</p>
-            </div>
-          </div>
         ) : (
-          <div className="relative max-w-4xl mx-auto">
-            {/* Timeline line */}
-            <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-primary-400"></div>
+          <div className="relative max-w-3xl">
+            <div
+              aria-hidden="true"
+              data-reveal-line
+              className="absolute bottom-2 left-[7px] top-2 w-px bg-line"
+            />
 
-            <div className="space-y-8">
-              {items
-                .sort((a, b) => {
-                  // Sort by startDate with newest first
-                  const dateA = new Date(a.startDate).getTime();
-                  const dateB = new Date(b.startDate).getTime();
-                  return dateB - dateA;
-                })
-                .map((e, index) => (
-                  <div key={e.id} className="relative flex items-start group">
-                    {/* Timeline dot */}
-                    <div className="absolute left-6 top-6 flex h-4 w-4 items-center justify-center rounded-full bg-primary-400 ring-8 ring-background-primary group-hover:scale-125 transition-transform duration-300">
-                      <div className="h-2 w-2 rounded-full bg-white"></div>
-                    </div>
+            <ol className="space-y-8">
+              {experience.map(item => (
+                <li key={item.id} className="relative pl-10" data-reveal>
+                  <span
+                    aria-hidden="true"
+                    className={`absolute left-0 top-7 h-[15px] w-[15px] rounded-full border-2 bg-bg ${
+                      item.current ? 'border-brand' : 'border-line-strong'
+                    }`}
+                  />
 
-                    {/* Content card */}
-                    <div className="ml-16 bg-background-secondary rounded-2xl p-6 border border-border-primary hover:border-primary-400 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex-1">
-                      <div className="flex items-start justify-between mb-4">
-                        <div>
-                          <h3 className="text-xl font-bold text-text-primary group-hover:text-primary-400 transition-colors">
-                            {e.role}
-                          </h3>
-                          <p className="text-lg font-semibold text-primary-400">
-                            {e.company}
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-background-primary text-primary-400 border border-border-primary">
-                            {e.current ? (
-                              <span className="flex items-center gap-1">
-                                <div className="h-2 w-2 bg-green-500 rounded-full animate-pulse"></div>
-                                Current
-                              </span>
-                            ) : (
-                              'Completed'
-                            )}
-                          </div>
-                        </div>
+                  <article className="panel p-6">
+                    <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
+                      <div>
+                        <h3 className="font-mono text-lg font-semibold text-fg">
+                          {item.role}
+                        </h3>
+                        <p className="mt-1 font-medium text-brand">
+                          {item.company}
+                        </p>
                       </div>
 
-                      <div className="mb-4">
-                        <time className="text-sm font-medium text-text-secondary">
-                          {new Date(e.startDate).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                          })}{' '}
-                          —{' '}
-                          {e.current
-                            ? 'Present'
-                            : e.endDate
-                              ? new Date(e.endDate).toLocaleDateString(
-                                  'en-US',
-                                  {
-                                    year: 'numeric',
-                                    month: 'long',
-                                  }
-                                )
-                              : 'N/A'}
+                      {item.current && (
+                        <span className="chip border-brand/50 text-brand">
+                          <span
+                            className="h-1.5 w-1.5 rounded-full bg-brand"
+                            aria-hidden="true"
+                          />
+                          Current
+                        </span>
+                      )}
+                    </div>
+
+                    <p className="mt-3 font-mono text-sm text-muted">
+                      <time dateTime={isoMonth(item.startDate)}>
+                        {monthYear.format(item.startDate)}
+                      </time>
+                      <span aria-hidden="true"> – </span>
+                      <span className="sr-only"> to </span>
+                      {item.current || !item.endDate ? (
+                        'Present'
+                      ) : (
+                        <time dateTime={isoMonth(item.endDate)}>
+                          {monthYear.format(item.endDate)}
                         </time>
-                      </div>
+                      )}
+                    </p>
 
-                      <p className="text-text-secondary leading-relaxed">
-                        {e.description}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-            </div>
+                    <p className="mt-4 whitespace-pre-line leading-relaxed text-muted">
+                      {item.description}
+                    </p>
+                  </article>
+                </li>
+              ))}
+            </ol>
           </div>
         )}
       </div>

@@ -5,9 +5,36 @@ module.exports = {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  // Added at runtime by scripts, so they never appear as class names in markup
+  safelist: ['js', 'is-visible'],
   theme: {
     extend: {
       colors: {
+        // Semantic tokens for the public site, defined per theme in globals.css
+        bg: 'rgb(var(--bg) / <alpha-value>)',
+        surface: {
+          DEFAULT: 'rgb(var(--surface) / <alpha-value>)',
+          2: 'rgb(var(--surface-2) / <alpha-value>)',
+        },
+        fg: 'rgb(var(--fg) / <alpha-value>)',
+        muted: 'rgb(var(--muted) / <alpha-value>)',
+        line: {
+          DEFAULT: 'rgb(var(--line) / <alpha-value>)',
+          strong: 'rgb(var(--line-strong) / <alpha-value>)',
+        },
+        brand: {
+          DEFAULT: 'rgb(var(--accent) / <alpha-value>)',
+          solid: 'rgb(var(--accent-solid) / <alpha-value>)',
+          on: 'rgb(var(--on-accent) / <alpha-value>)',
+        },
+        danger: 'rgb(var(--danger) / <alpha-value>)',
+        term: {
+          bg: 'rgb(var(--term-bg) / <alpha-value>)',
+          fg: 'rgb(var(--term-fg) / <alpha-value>)',
+          muted: 'rgb(var(--term-muted) / <alpha-value>)',
+          accent: 'rgb(var(--term-accent) / <alpha-value>)',
+          line: 'rgb(var(--term-line) / <alpha-value>)',
+        },
         primary: {
           50: '#f0f9ff',
           100: '#e0f2fe',
@@ -69,8 +96,21 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        mono: ['JetBrains Mono', 'monospace'],
+        sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
+        mono: ['var(--font-mono)', 'ui-monospace', 'monospace'],
+      },
+      fontSize: {
+        display: [
+          'clamp(2rem, 4.2vw + 1rem, 3.75rem)',
+          { lineHeight: '1.1', letterSpacing: '-0.03em' },
+        ],
+        title: [
+          'clamp(1.625rem, 2vw + 1rem, 2.5rem)',
+          { lineHeight: '1.15', letterSpacing: '-0.02em' },
+        ],
+      },
+      transitionTimingFunction: {
+        out: 'cubic-bezier(0.22, 1, 0.36, 1)',
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',
@@ -113,6 +153,8 @@ module.exports = {
         '4xl': '2rem',
       },
       boxShadow: {
+        card: '0 1px 2px rgb(var(--shadow) / 0.06), 0 8px 24px -12px rgb(var(--shadow) / 0.25)',
+        lift: '0 2px 4px rgb(var(--shadow) / 0.08), 0 20px 40px -16px rgb(var(--shadow) / 0.4)',
         soft: '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
         medium:
           '0 4px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',

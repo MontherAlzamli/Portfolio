@@ -1,116 +1,156 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Menu, X } from 'lucide-react';
+import { site } from '@/data/site';
+import { ThemeToggle } from '@/components/layout/ThemeToggle';
 
-export function Navigation() {
+export function Navigation({ name }: { name: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [active, setActive] = useState('home');
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const navItems = [
-    { name: 'Home', href: '#home' },
-    { name: 'About', href: '#about' },
-    { name: 'Skills', href: '#skills' },
-    { name: 'Projects', href: '#projects' },
-    { name: 'Experience', href: '#experience' },
-    { name: 'Contact', href: '#contact' },
-  ];
+  // The active section is the one crossing the middle of the viewport
+  useEffect(() => {
+    const sections = site.nav
+      .map(item => document.getElementById(item.id))
+      .filter((el): el is HTMLElement => el !== null);
+
+    if (!('IntersectionObserver' in window)) return;
+
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) setActive(entry.target.id);
+        });
+      },
+      { rootMargin: '-45% 0px -50% 0px' }
+    );
+
+    sections.forEach(section => observer.observe(section));
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isOpen]);
+
+  const handle = name.split(' ')[0].toLowerCase();
 
   return (
-    <nav
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        scrolled
-          ? 'bg-background-secondary shadow-lg border-b border-border-primary'
-          : 'bg-transparent'
+    <header
+      className={`fixed inset-x-0 top-0 z-50 border-b transition-colors duration-300 ${
+        scrolled || isOpen
+          ? 'border-line bg-bg/90 backdrop-blur'
+          : 'border-transparent bg-transparent'
       }`}
-      role="navigation"
-      aria-label="Main navigation"
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <div className="flex-shrink-0">
-            <a
-              href="#home"
-              className={`text-2xl font-bold transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2 focus:ring-offset-background-primary rounded ${
-                scrolled ? 'text-text-primary' : 'text-text-primary'
-              }`}
-              aria-label="Monther Alzamli - Go to home section"
-            >
-              Monther Alzamli
-            </a>
-          </div>
+      <nav className="wrap" aria-label="Main">
+        <div className="flex h-16 items-center justify-between gap-4">
+          <a
+            href="#home"
+            className="-ml-2 inline-flex min-h-[2.75rem] items-center rounded px-2 font-mono text-base font-semibold text-fg"
+            aria-label={`${name}, back to top`}
+          >
+            <span className="text-brand" aria-hidden="true">
+              ~/
+            </span>
+            {handle}
+          </a>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-8" role="menubar">
-              {navItems.map(item => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className="px-3 py-2 text-sm font-medium transition-colors duration-200 text-text-secondary hover:text-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2 focus:ring-offset-background-primary rounded"
-                  role="menuitem"
-                  aria-label={`Navigate to ${item.name} section`}
-                >
-                  {item.name}
-                </a>
-              ))}
-            </div>
-          </div>
+          <div className="flex items-center gap-2">
+            <ul className="hidden items-center md:flex">
+              {site.nav.map(item => {
+                const isActive = active === item.id;
+                return (
+                  <li key={item.id}>
+                    <a
+                      href={`#${item.id}`}
+                      aria-current={isActive ? 'location' : undefined}
+                      className={`relative inline-flex min-h-[2.75rem] items-center rounded px-3 font-mono text-sm transition-colors duration-200 ${
+                        isActive ? 'text-fg' : 'text-muted hover:text-fg'
+                      }`}
+                    >
+                      {item.name}
+                      <span
+                        aria-hidden="true"
+                        className={`absolute inset-x-3 bottom-2 h-0.5 origin-left rounded-full bg-brand transition-transform duration-300 ease-out ${
+                          isActive ? 'scale-x-100' : 'scale-x-0'
+                        }`}
+                      />
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
 
-          {/* Mobile menu button */}
-          <div className="md:hidden">
+            <ThemeToggle />
+
             <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="transition-colors duration-200 text-text-secondary hover:text-primary-400 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2 focus:ring-offset-background-primary rounded p-2"
-              aria-label={
-                isOpen ? 'Close navigation menu' : 'Open navigation menu'
-              }
+              type="button"
+              onClick={() => setIsOpen(open => !open)}
+              className="icon-btn md:hidden"
+              aria-label={isOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={isOpen}
               aria-controls="mobile-menu"
             >
               {isOpen ? (
-                <X size={24} aria-hidden="true" />
+                <X className="h-5 w-5" aria-hidden="true" />
               ) : (
-                <Menu size={24} aria-hidden="true" />
+                <Menu className="h-5 w-5" aria-hidden="true" />
               )}
             </button>
           </div>
         </div>
 
-        {/* Mobile Navigation */}
-        {isOpen && (
-          <div
-            className="md:hidden"
-            id="mobile-menu"
-            role="menu"
-            aria-label="Mobile navigation menu"
-          >
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-background-secondary rounded-lg mt-2 shadow-lg border border-border-primary">
-              {navItems.map(item => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className="text-text-secondary hover:text-primary-400 hover:bg-background-primary block px-3 py-2 text-base font-medium transition-colors duration-200 rounded focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2 focus:ring-offset-background-secondary"
-                  role="menuitem"
-                  aria-label={`Navigate to ${item.name} section`}
-                  onClick={() => setIsOpen(false)}
-                >
-                  {item.name}
-                </a>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-    </nav>
+        {/* Stays in the DOM so it can animate; `invisible` removes it from tab order */}
+        <div
+          id="mobile-menu"
+          className={`absolute inset-x-0 top-16 border-b border-line bg-bg transition-[opacity,transform,visibility] duration-200 ease-out md:hidden ${
+            isOpen
+              ? 'visible translate-y-0 opacity-100'
+              : 'invisible -translate-y-2 opacity-0'
+          }`}
+        >
+          <ul className="wrap py-3">
+            {site.nav.map(item => {
+              const isActive = active === item.id;
+              return (
+                <li key={item.id}>
+                  <a
+                    href={`#${item.id}`}
+                    onClick={() => setIsOpen(false)}
+                    aria-current={isActive ? 'location' : undefined}
+                    className={`flex min-h-[2.75rem] items-center gap-3 rounded px-2 font-mono text-base transition-colors duration-200 ${
+                      isActive ? 'text-fg' : 'text-muted'
+                    }`}
+                  >
+                    <span
+                      aria-hidden="true"
+                      className={isActive ? 'text-brand' : 'text-transparent'}
+                    >
+                      &gt;
+                    </span>
+                    {item.name}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </nav>
+    </header>
   );
 }

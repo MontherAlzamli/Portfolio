@@ -7,27 +7,34 @@ import { ContactSection } from '@/components/sections/ContactSection';
 import { Navigation } from '@/components/layout/Navigation';
 import { Footer } from '@/components/layout/Footer';
 import { StructuredData } from '@/components/StructuredData';
-import { ErrorBoundary } from '@/components/LoadingComponents';
+import { RevealObserver } from '@/components/ui/RevealObserver';
+import { getSiteContent } from '@/lib/content';
 
-export default function Home() {
+// Statically generated; the admin API revalidates this page after every edit,
+// and this interval is the fallback.
+export const revalidate = 300;
+
+export default async function Home() {
+  const { profile, skills, projects, experience, stats } =
+    await getSiteContent();
+
   return (
-    <ErrorBoundary>
-      <main className="min-h-screen">
-        <a href="#main-content" className="skip-link">
-          Skip to main content
-        </a>
-        <StructuredData />
-        <Navigation />
-        <div id="main-content">
-          <HeroSection />
-          <AboutSection />
-          <SkillsSection />
-          <ProjectsSection />
-          <ExperienceSection />
-          <ContactSection />
-        </div>
-        <Footer />
+    <>
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
+      <StructuredData profile={profile} skills={skills.map(s => s.name)} />
+      <Navigation name={profile.name} />
+      <main id="main-content">
+        <HeroSection profile={profile} />
+        <AboutSection profile={profile} stats={stats} />
+        <SkillsSection skills={skills} />
+        <ProjectsSection projects={projects} />
+        <ExperienceSection experience={experience} />
+        <ContactSection profile={profile} />
       </main>
-    </ErrorBoundary>
+      <Footer name={profile.name} />
+      <RevealObserver />
+    </>
   );
 }

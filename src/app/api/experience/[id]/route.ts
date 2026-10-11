@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { requireAdmin } from '@/lib/requireAdmin';
+import { revalidatePath } from 'next/cache';
 
 // Validation schemas
 const ExperienceSchema = z.object({
@@ -121,6 +122,8 @@ export async function PUT(
       data: dataWithDates,
     });
 
+    revalidatePath('/');
+
     return NextResponse.json({
       success: true,
       data: updatedExperience,
@@ -166,6 +169,8 @@ export async function DELETE(
     await prisma.experience.delete({
       where: { id: params.id },
     });
+
+    revalidatePath('/');
 
     return NextResponse.json({
       success: true,

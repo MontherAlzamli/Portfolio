@@ -1,137 +1,103 @@
-'use client';
+import type { CSSProperties } from 'react';
+import { Mail, MapPin } from 'lucide-react';
+import { SectionHeading } from '@/components/ui/SectionHeading';
+import { SmartImage } from '@/components/ui/SmartImage';
+import type { PublicProfile, SiteContent } from '@/lib/content';
 
-import { useState, useEffect } from 'react';
-import logger from '@/lib/logger';
-
-type ProfileData = {
-  name: string;
-  title: string;
-  bio: string;
-  email: string;
-  phone: string;
-  location: string;
-  website: string;
-  github: string;
-  linkedin: string;
-  twitter: string;
-  profileImage: string;
+type AboutSectionProps = {
+  profile: PublicProfile;
+  stats: SiteContent['stats'];
 };
 
-export function AboutSection() {
-  const [profile, setProfile] = useState<ProfileData | null>(null);
-  const [loading, setLoading] = useState(true);
+export function AboutSection({ profile, stats }: AboutSectionProps) {
+  const numbers = [
+    stats.years
+      ? { value: `${stats.years}+`, label: 'Years of experience' }
+      : null,
+    stats.projects
+      ? { value: `${stats.projects}`, label: 'Projects delivered' }
+      : null,
+    stats.skills
+      ? { value: `${stats.skills}`, label: 'Technologies used' }
+      : null,
+  ].filter((item): item is { value: string; label: string } => item !== null);
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const res = await fetch('/api/profile', { cache: 'no-store' });
-        if (res.ok) {
-          const json = await res.json();
-          setProfile(json?.data ?? null);
-        }
-      } catch (error) {
-        logger.error('Error fetching profile:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProfile();
-  }, []);
-
-  if (loading) {
-    return (
-      <section id="about" className="py-20 bg-background-primary">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary-400 mx-auto mb-4"></div>
-            <p className="text-text-secondary">Loading profile...</p>
-          </div>
-        </div>
-      </section>
-    );
-  }
+  const paragraphs = profile.bio.split(/\n+/).filter(Boolean);
 
   return (
-    <section id="about" className="py-20 bg-background-primary">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-block mb-8">
-            <h2 className="text-4xl md:text-5xl font-bold text-text-primary mb-4">
-              About Me
-            </h2>
-            <div className="h-1 w-24 bg-primary-400 mx-auto rounded-full"></div>
-          </div>
-          <div className="bg-background-secondary rounded-2xl p-8 border border-border-primary">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-              <div className="text-left">
-                <h3 className="text-2xl font-bold text-text-primary mb-4">
-                  {profile?.name || 'Monther Alzamli'}
-                </h3>
-                <p className="text-lg text-text-secondary leading-relaxed mb-6">
-                  {profile?.bio ||
-                    'I create beautiful, functional, and user-centered digital experiences using modern web technologies like React, Next.js, and TypeScript.'}
-                </p>
-                <div className="space-y-3">
-                  {profile?.location && (
-                    <div className="flex items-center text-text-secondary">
-                      <span className="font-medium mr-2">Location:</span>
-                      <span>{profile.location}</span>
-                    </div>
-                  )}
-                  {profile?.email && (
-                    <div className="flex items-center text-text-secondary">
-                      <span className="font-medium mr-2">Email:</span>
-                      <a
-                        href={`mailto:${profile.email}`}
-                        className="text-primary-400 hover:text-primary-300 transition-colors"
-                      >
-                        {profile.email}
-                      </a>
-                    </div>
-                  )}
-                  {profile?.phone && (
-                    <div className="flex items-center text-text-secondary">
-                      <span className="font-medium mr-2">Phone:</span>
-                      <a
-                        href={`tel:${profile.phone}`}
-                        className="text-primary-400 hover:text-primary-300 transition-colors"
-                      >
-                        {profile.phone}
-                      </a>
-                    </div>
-                  )}
-                  {profile?.website && (
-                    <div className="flex items-center text-text-secondary">
-                      <span className="font-medium mr-2">Website:</span>
-                      <a
-                        href={profile.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-primary-400 hover:text-primary-300 transition-colors"
-                      >
-                        {profile.website}
-                      </a>
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="flex justify-center">
-                <div className="relative w-64 h-64">
-                  <div className="absolute inset-0 bg-primary-400 rounded-2xl p-1">
-                    <div className="w-full h-full bg-background-primary rounded-2xl p-2">
-                      <div className="w-full h-full rounded-xl overflow-hidden bg-background-secondary">
-                        <img
-                          src={profile?.profileImage || '/profile-image.jpg'}
-                          alt={profile?.name || 'Monther Alzamli'}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+    <section id="about" className="section border-t border-line">
+      <div className="wrap">
+        <SectionHeading index="01" label="about" title="A bit about me" />
+
+        <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+          <figure
+            className="panel mx-auto w-full max-w-sm overflow-hidden lg:mx-0"
+            data-reveal
+          >
+            <div className="relative aspect-[4/5] bg-surface-2">
+              <SmartImage
+                src={profile.profileImage || '/profile-image.jpg'}
+                alt={`Portrait of ${profile.name}`}
+                sizes="(min-width: 1024px) 384px, (min-width: 640px) 384px, 90vw"
+                className="object-cover object-top"
+              />
             </div>
+            <figcaption className="flex items-center justify-between gap-3 border-t border-line px-4 py-3 font-mono text-xs text-muted">
+              <span className="truncate">{profile.name}</span>
+              <span className="shrink-0 text-brand">{profile.title}</span>
+            </figcaption>
+          </figure>
+
+          <div>
+            <div
+              className="space-y-4 text-lg leading-relaxed text-muted"
+              data-reveal
+            >
+              {paragraphs.map((text, i) => (
+                <p key={i}>{text}</p>
+              ))}
+            </div>
+
+            {numbers.length > 0 && (
+              <dl className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3">
+                {numbers.map((item, i) => (
+                  <div
+                    key={item.label}
+                    className="panel flex flex-col-reverse gap-1 p-5"
+                    data-reveal
+                    style={{ '--i': i } as CSSProperties}
+                  >
+                    <dt className="text-sm text-muted">{item.label}</dt>
+                    <dd className="font-mono text-3xl font-semibold text-fg">
+                      {item.value}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            )}
+
+            <ul
+              className="mt-8 flex flex-col gap-3 font-mono text-sm text-muted sm:flex-row sm:flex-wrap sm:gap-x-8"
+              data-reveal
+            >
+              {profile.location && (
+                <li className="inline-flex items-center gap-2">
+                  <MapPin className="h-4 w-4 text-brand" aria-hidden="true" />
+                  {profile.location}
+                </li>
+              )}
+              {profile.email && (
+                <li>
+                  <a
+                    href={`mailto:${profile.email}`}
+                    className="inline-flex min-h-[2.75rem] items-center gap-2 transition-colors duration-200 hover:text-brand"
+                  >
+                    <Mail className="h-4 w-4 text-brand" aria-hidden="true" />
+                    {profile.email}
+                  </a>
+                </li>
+              )}
+            </ul>
           </div>
         </div>
       </div>

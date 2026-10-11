@@ -1,108 +1,113 @@
-'use client';
+import type { CSSProperties } from 'react';
+import type { Skill } from '@prisma/client';
+import {
+  Cloud,
+  Code2,
+  Database,
+  LayoutTemplate,
+  Server,
+  Smartphone,
+  Wrench,
+  type LucideIcon,
+} from 'lucide-react';
+import { SectionHeading } from '@/components/ui/SectionHeading';
+import { site } from '@/data/site';
 
-import { useState, useEffect } from 'react';
-import logger from '@/lib/logger';
+// Picks a group icon from keywords in the category name
+const groupIcons: [RegExp, LucideIcon][] = [
+  [/front|ui|client|web/i, LayoutTemplate],
+  [/back|server|api/i, Server],
+  [/data|sql|storage/i, Database],
+  [/devops|cloud|deploy|infra|hosting/i, Cloud],
+  [/mobile|android|ios|native/i, Smartphone],
+  [/tool|test|other|misc/i, Wrench],
+];
 
-type Skill = {
-  id: string;
-  name: string;
-  category: string;
-  level: number;
-  iconUrl?: string | null;
-  order: number;
-};
+function iconFor(category: string): LucideIcon {
+  return groupIcons.find(([pattern]) => pattern.test(category))?.[1] ?? Code2;
+}
 
-export function SkillsSection() {
-  const [skills, setSkills] = useState<Skill[]>([]);
-  const [loading, setLoading] = useState(true);
+function groupSkills(skills: Skill[]) {
+  const groups = new Map<string, Skill[]>();
+  skills.forEach(skill => {
+    groups.set(skill.category, [...(groups.get(skill.category) ?? []), skill]);
+  });
 
-  useEffect(() => {
-    const fetchSkills = async () => {
-      try {
-        const res = await fetch('/api/skills?limit=100', { cache: 'no-store' });
-        if (res.ok) {
-          const json = await res.json();
-          setSkills(json?.data ?? []);
-        }
-      } catch (error) {
-        logger.error('Error fetching skills:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSkills();
-  }, []);
-
-  if (loading) {
-    return (
-      <section id="skills" className="py-20 bg-background-primary">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-6xl mx-auto text-center">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary-400 mx-auto mb-4"></div>
-            <p className="text-text-secondary">Loading skills...</p>
-          </div>
-        </div>
-      </section>
+  const rank = (category: string) => {
+    const i = site.skillGroupOrder.findIndex(
+      name => name.toLowerCase() === category.toLowerCase()
     );
-  }
-  const categories = Array.from(new Set(skills.map(s => s.category)));
+    return i === -1 ? site.skillGroupOrder.length : i;
+  };
+
+  return Array.from(groups.entries()).sort(
+    ([a], [b]) => rank(a) - rank(b) || a.localeCompare(b)
+  );
+}
+
+export function SkillsSection({ skills }: { skills: Skill[] }) {
+  const groups = groupSkills(skills);
 
   return (
-    <section id="skills" className="py-20 bg-background-primary">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center mb-16">
-          <div className="inline-block">
-            <h2 className="text-4xl md:text-5xl font-bold text-text-primary mb-4">
-              Skills & Technologies
-            </h2>
-            <div className="h-1 w-24 bg-primary-400 mx-auto rounded-full"></div>
-          </div>
-          <p className="text-xl text-text-secondary max-w-2xl mx-auto mt-6">
-            Technologies and tools I work with to bring ideas to life
-          </p>
-        </div>
+    <section id="skills" className="section border-t border-line">
+      <div className="wrap">
+        <SectionHeading
+          index="02"
+          label="skills"
+          title="Skills and technologies"
+          description="The tools I use to design, build and ship products."
+        />
 
-        {skills.length === 0 ? (
-          <div className="text-center py-20">
-            <div className="bg-background-secondary rounded-2xl p-8 max-w-md mx-auto border border-border-primary">
-              <p className="text-lg text-text-secondary">No skills yet.</p>
-            </div>
-          </div>
+        {groups.length === 0 ? (
+          <p className="panel p-6 text-muted">
+            Skills will be listed here soon.
+          </p>
         ) : (
-          <div className="space-y-12">
-            {categories.map(cat => (
-              <div key={cat} className="group">
-                <div className="text-center mb-8">
-                  <h3 className="text-2xl font-bold text-text-primary mb-2 group-hover:text-primary-400 transition-colors">
-                    {cat}
-                  </h3>
-                  <div className="h-0.5 w-16 bg-primary-400 mx-auto rounded-full"></div>
-                </div>
-                <div className="flex flex-wrap gap-3 justify-center">
-                  {skills
-                    .filter(s => s.category === cat)
-                    .sort((a, b) => a.order - b.order)
-                    .map(s => (
-                      <div
-                        key={s.id}
-                        className="group/skill inline-flex items-center gap-2 px-4 py-2 bg-background-secondary rounded-full border border-border-primary hover:border-primary-400 hover:bg-primary-400/10 transition-all duration-300"
-                      >
-                        {s.iconUrl && (
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {groups.map(([category, items], i) => {
+              const Icon = iconFor(category);
+              return (
+                <section
+                  key={category}
+                  className="panel p-6"
+                  data-reveal
+                  style={{ '--i': i % 3 } as CSSProperties}
+                  aria-labelledby={`skills-${i}`}
+                >
+                  <div className="mb-5 flex items-center gap-3">
+                    <span className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-line bg-surface-2 text-brand">
+                      <Icon className="h-5 w-5" aria-hidden="true" />
+                    </span>
+                    <h3
+                      id={`skills-${i}`}
+                      className="font-mono text-base font-semibold text-fg"
+                    >
+                      {category}
+                    </h3>
+                  </div>
+
+                  <ul className="flex flex-wrap gap-2">
+                    {items.map(skill => (
+                      <li key={skill.id} className="chip">
+                        {skill.iconUrl && (
+                          // eslint-disable-next-line @next/next/no-img-element
                           <img
-                            src={s.iconUrl}
-                            alt={s.name}
-                            className="h-5 w-5"
+                            src={skill.iconUrl}
+                            alt=""
+                            width={16}
+                            height={16}
+                            loading="lazy"
+                            decoding="async"
+                            className="h-4 w-4 shrink-0"
                           />
                         )}
-                        <span className="text-text-secondary font-medium text-sm group-hover/skill:text-primary-400 transition-colors">
-                          {s.name}
-                        </span>
-                      </div>
+                        {skill.name}
+                      </li>
                     ))}
-                </div>
-              </div>
-            ))}
+                  </ul>
+                </section>
+              );
+            })}
           </div>
         )}
       </div>

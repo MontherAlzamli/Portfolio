@@ -1,98 +1,79 @@
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import type { Metadata, Viewport } from 'next';
+import { IBM_Plex_Sans, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
-import AuthProvider from '@/components/providers/AuthProvider';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { site } from '@/data/site';
 
-const inter = Inter({ subsets: ['latin'] });
+const sans = IBM_Plex_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-sans',
+  display: 'swap',
+});
+
+const mono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-mono',
+  display: 'swap',
+});
+
+const title =
+  'Monther Alzamli | Full Stack Developer (React, Next.js, Node.js)';
+const description =
+  'Full Stack Developer building fast, reliable web apps with React, Next.js, Node.js and TypeScript. See my projects and experience, and get in touch for freelance work or full-time roles.';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://monther-alzamli.com'),
+  metadataBase: new URL(site.url),
   title: {
-    default: 'Monther Alzamli - Full Stack Developer & Software Engineer',
+    default: title,
     template: '%s | Monther Alzamli',
   },
-  description:
-    'Experienced Full Stack Developer specializing in React, Next.js, Node.js, and modern web technologies. View my portfolio of innovative projects and professional experience.',
-  keywords: [
-    'Monther Alzamli',
-    'Full Stack Developer',
-    'Software Engineer',
-    'React Developer',
-    'Next.js Developer',
-    'TypeScript',
-    'Node.js',
-    'JavaScript',
-    'Web Development',
-    'Frontend Developer',
-    'Backend Developer',
-    'Portfolio',
-    'Software Development',
-    'Web Applications',
-    'Mobile Development',
-    'UI/UX Design',
-    'Database Design',
-    'API Development',
-    'Cloud Computing',
-    'DevOps',
-  ],
-  authors: [{ name: 'Monther Alzamli', url: 'https://monther-alzamli.com' }],
+  description,
+  authors: [{ name: 'Monther Alzamli', url: site.url }],
   creator: 'Monther Alzamli',
-  publisher: 'Monther Alzamli',
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
-  },
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://monther-alzamli.com',
-    title: 'Monther Alzamli - Full Stack Developer & Software Engineer',
-    description:
-      'Experienced Full Stack Developer specializing in React, Next.js, Node.js, and modern web technologies. View my portfolio of innovative projects and professional experience.',
-    siteName: 'Monther Alzamli Portfolio',
-    images: [
-      {
-        url: '/og-image.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'Monther Alzamli - Full Stack Developer',
-      },
-    ],
+    url: site.url,
+    title,
+    description,
+    siteName: 'Monther Alzamli',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Monther Alzamli - Full Stack Developer & Software Engineer',
-    description:
-      'Experienced Full Stack Developer specializing in React, Next.js, Node.js, and modern web technologies. View my portfolio of innovative projects and professional experience.',
-    images: ['/og-image.jpg'],
-    creator: '@montheralzamli',
+    title,
+    description,
   },
   robots: {
     index: true,
     follow: true,
-    nocache: true,
     googleBot: {
       index: true,
       follow: true,
-      noimageindex: true,
       'max-video-preview': -1,
       'max-image-preview': 'large',
       'max-snippet': -1,
     },
   },
-  verification: {
-    google: 'your-google-verification-code',
-    yandex: 'your-yandex-verification-code',
-    yahoo: 'your-yahoo-verification-code',
-  },
   alternates: {
-    canonical: 'https://monther-alzamli.com',
+    canonical: '/',
   },
+  icons: {
+    icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }],
+  },
+  manifest: '/manifest.json',
   category: 'technology',
 };
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#0f172a',
+};
+
+// Runs before first paint: applies the saved theme and marks JS as available
+// for scroll reveals. If the page script never starts, the mark is removed so
+// content cannot stay hidden.
+const bootScript = `(function(){var d=document.documentElement;try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')d.setAttribute('data-theme',t);}catch(e){}d.classList.add('js');setTimeout(function(){if(!window.__revealReady)d.classList.remove('js');},3000);})();`;
 
 export default function RootLayout({
   children,
@@ -100,43 +81,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#1e293b" />
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, shrink-to-fit=no"
-        />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
-        <link rel="dns-prefetch" href="https://images.unsplash.com" />
+        <script dangerouslySetInnerHTML={{ __html: bootScript }} />
       </head>
       <body
-        className={`${inter.className} antialiased`}
-        suppressHydrationWarning={true}
+        className={`${sans.variable} ${mono.variable} font-sans antialiased`}
       >
-        <AuthProvider>{children}</AuthProvider>
-        <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="dark"
-          toastClassName="toast-container"
-        />
+        {children}
       </body>
     </html>
   );

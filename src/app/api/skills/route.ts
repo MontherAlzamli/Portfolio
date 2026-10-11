@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import logger from '@/lib/logger';
 import { requireAdmin } from '@/lib/requireAdmin';
+import { revalidatePath } from 'next/cache';
 
 // Validation schemas
 const SkillSchema = z.object({
@@ -111,6 +112,8 @@ export async function POST(request: NextRequest) {
     const skill = await prisma.skill.create({
       data: validatedData,
     });
+
+    revalidatePath('/');
 
     return NextResponse.json(
       {

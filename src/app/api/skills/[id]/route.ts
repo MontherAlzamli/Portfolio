@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { requireAdmin } from '@/lib/requireAdmin';
+import { revalidatePath } from 'next/cache';
 
 // Validation schemas
 const SkillSchema = z.object({
@@ -109,6 +110,8 @@ export async function PUT(
       data: validatedData,
     });
 
+    revalidatePath('/');
+
     return NextResponse.json({
       success: true,
       data: updatedSkill,
@@ -154,6 +157,8 @@ export async function DELETE(
     await prisma.skill.delete({
       where: { id: params.id },
     });
+
+    revalidatePath('/');
 
     return NextResponse.json({
       success: true,

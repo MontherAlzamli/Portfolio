@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import logger from '@/lib/logger';
 import { requireAdmin } from '@/lib/requireAdmin';
+import { revalidatePath } from 'next/cache';
 
 // Helper function to generate slug
 const generateSlug = (title: string) => {
@@ -121,6 +122,8 @@ export async function POST(request: NextRequest) {
         slug,
       },
     });
+
+    revalidatePath('/');
 
     return NextResponse.json(
       {

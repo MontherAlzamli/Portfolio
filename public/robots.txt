@@ -1,17 +1,6 @@
 User-agent: *
 Allow: /
-
-# Disallow admin pages
 Disallow: /admin/
 Disallow: /api/
 
-# Allow important pages
-Allow: /
-Allow: /projects/
-Allow: /sitemap.xml
-
-# Sitemap location
 Sitemap: https://monther-alzamli.com/sitemap.xml
-
-# Crawl delay (optional)
-Crawl-delay: 1

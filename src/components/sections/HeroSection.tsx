@@ -1,260 +1,142 @@
-'use client';
+import type { CSSProperties } from 'react';
+import { ArrowDown, Github, Linkedin, Mail } from 'lucide-react';
+import { site } from '@/data/site';
+import type { PublicProfile } from '@/lib/content';
+import { HeroTerminal } from '@/components/sections/HeroTerminal';
 
-import { useState, useEffect } from 'react';
-import { ArrowDown, Github, Linkedin, Mail, Download } from 'lucide-react';
-import { LoadingSpinner } from '@/components/LoadingComponents';
+// Position in the page-load sequence
+const step = (d: number) => ({ '--d': d }) as CSSProperties;
 
-type ProfileData = {
-  name: string;
-  title: string;
-  bio: string;
-  email: string;
-  phone: string;
-  location: string;
-  website: string;
-  github: string;
-  linkedin: string;
-  twitter: string;
-  profileImage: string;
-};
-
-export function HeroSection() {
-  const [profile, setProfile] = useState<ProfileData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const res = await fetch('/api/profile', {
-          cache: 'no-store',
-          headers: {
-            'Cache-Control': 'no-cache',
-            Pragma: 'no-cache',
-          },
-        });
-        if (res.ok) {
-          const json = await res.json();
-          setProfile(json?.data ?? null);
-        } else {
-          setError('Failed to load profile data');
-        }
-      } catch (error) {
-        setError('Network error occurred');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProfile();
-  }, []);
-
-  if (loading) {
-    return (
-      <section
-        id="home"
-        className="min-h-screen flex items-center justify-center bg-background-primary relative overflow-hidden pt-20"
-        aria-label="Loading profile information"
-      >
-        <div className="text-center">
-          <LoadingSpinner size="lg" className="mx-auto mb-4" />
-          <p className="text-text-secondary">Loading profile...</p>
-        </div>
-      </section>
-    );
-  }
-
-  if (error) {
-    return (
-      <section
-        id="home"
-        className="min-h-screen flex items-center justify-center bg-background-primary relative overflow-hidden pt-20"
-        aria-label="Profile loading error"
-      >
-        <div className="text-center">
-          <p className="text-red-500 mb-4">{error}</p>
-          <button
-            onClick={() => window.location.reload()}
-            className="px-4 py-2 bg-primary-400 text-white rounded-lg hover:bg-primary-500 transition-colors"
-          >
-            Retry
-          </button>
-        </div>
-      </section>
-    );
-  }
+export function HeroSection({ profile }: { profile: PublicProfile }) {
+  const { hero } = site;
 
   return (
     <section
       id="home"
-      className="min-h-screen flex items-center justify-center bg-background-primary relative overflow-hidden pt-20"
-      aria-label="Hero section with profile information"
+      className="relative isolate overflow-hidden pb-20 pt-28 lg:pb-28 lg:pt-40"
     >
-      {/* Background decorative elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary-400/10 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-primary-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary-300/5 rounded-full blur-3xl"></div>
-      </div>
+      <div aria-hidden="true" className="hero-grid absolute inset-0 -z-10" />
+      <div
+        aria-hidden="true"
+        className="hero-glow absolute -top-40 left-1/2 -z-10 h-[36rem] w-[36rem] -translate-x-1/2"
+      />
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Left side - Content */}
-            <div className="order-2 lg:order-1 text-left lg:text-left">
-              <div className="mb-6">
-                <span className="inline-block px-4 py-2 bg-background-secondary text-text-secondary rounded-full text-sm font-semibold border border-border-primary">
-                  Hello, I'm
-                </span>
-              </div>
+      <div className="wrap grid items-center gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
+        <div>
+          <p
+            className="hero-in mb-5 font-mono text-sm text-muted"
+            style={step(0)}
+          >
+            <span className="text-brand" aria-hidden="true">
+              &gt;{' '}
+            </span>
+            {profile.name}
+            <span aria-hidden="true"> · </span>
+            <span className="sr-only">, </span>
+            {profile.title}
+          </p>
 
-              <h1 className="text-5xl md:text-7xl font-bold text-text-primary mb-6 leading-tight">
-                {profile?.name || 'Monther Alzamli'}
-              </h1>
+          <h1
+            className="hero-in font-mono text-display font-semibold text-fg text-balance"
+            style={step(1)}
+          >
+            {hero.headline}
+          </h1>
 
-              <div className="mb-8">
-                <h2 className="text-2xl md:text-3xl font-semibold text-text-primary mb-4">
-                  {profile?.title || 'Full Stack Developer'}
-                </h2>
-                <p className="text-lg md:text-xl text-text-secondary leading-relaxed max-w-2xl">
-                  {profile?.bio ||
-                    'I create beautiful, functional, and user-centered digital experiences using modern web technologies like React, Next.js, and TypeScript.'}
-                </p>
-              </div>
+          <p
+            className="hero-in mt-6 max-w-xl text-lg leading-relaxed text-muted"
+            style={step(2)}
+          >
+            {hero.valueProp}
+          </p>
 
-              {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                <a
-                  href="#projects"
-                  className="group inline-flex items-center justify-center px-8 py-4 bg-primary-400 text-white font-semibold rounded-xl hover:bg-primary-500 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-primary-400/25 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2 focus:ring-offset-background-primary"
-                  aria-label="View my projects and work portfolio"
-                >
-                  <span>View My Work</span>
-                  <ArrowDown
-                    className="ml-2 h-5 w-5 group-hover:translate-y-1 transition-transform duration-200"
-                    aria-hidden="true"
-                  />
-                </a>
-                <a
-                  href="#contact"
-                  className="group inline-flex items-center justify-center px-8 py-4 bg-background-secondary text-text-primary font-semibold rounded-xl border border-border-primary hover:border-primary-400 transition-all duration-300 transform hover:scale-105 shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2 focus:ring-offset-background-primary"
-                  aria-label="Contact me for collaboration or inquiries"
-                >
-                  <span>Get In Touch</span>
-                  <Mail
-                    className="ml-2 h-5 w-5 group-hover:scale-110 transition-transform duration-200"
-                    aria-hidden="true"
-                  />
-                </a>
-              </div>
-
-              {/* Social Links */}
-              <div className="flex items-center gap-6">
-                <span className="text-sm text-text-secondary font-medium">
-                  Follow me:
-                </span>
-                <div className="flex gap-4">
-                  {profile?.github && (
-                    <a
-                      href={profile.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group p-3 bg-background-secondary rounded-xl border border-border-primary hover:border-primary-400 transition-all duration-300 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2 focus:ring-offset-background-primary"
-                      aria-label="Visit my GitHub profile"
-                    >
-                      <Github
-                        className="h-6 w-6 text-text-secondary group-hover:text-primary-400 transition-colors"
-                        aria-hidden="true"
-                      />
-                    </a>
-                  )}
-                  {profile?.linkedin && (
-                    <a
-                      href={profile.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group p-3 bg-background-secondary rounded-xl border border-border-primary hover:border-primary-400 transition-all duration-300 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2 focus:ring-offset-background-primary"
-                      aria-label="Visit my LinkedIn profile"
-                    >
-                      <Linkedin
-                        className="h-6 w-6 text-text-secondary group-hover:text-primary-400 transition-colors"
-                        aria-hidden="true"
-                      />
-                    </a>
-                  )}
-                  {profile?.email && (
-                    <a
-                      href={`mailto:${profile.email}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group p-3 bg-background-secondary rounded-xl border border-border-primary hover:border-primary-400 transition-all duration-300 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-2 focus:ring-offset-background-primary"
-                      aria-label="Send me an email"
-                    >
-                      <Mail
-                        className="h-6 w-6 text-text-secondary group-hover:text-primary-400 transition-colors"
-                        aria-hidden="true"
-                      />
-                    </a>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Right side - Profile Image */}
-            <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
-              <div className="relative">
-                {/* Main image container */}
-                <div className="relative w-80 h-80 lg:w-96 lg:h-96">
-                  {/* Border */}
-                  <div className="absolute inset-0 bg-primary-400 rounded-3xl p-1">
-                    <div className="w-full h-full bg-background-primary rounded-3xl p-2">
-                      {/* Image container */}
-                      <div className="w-full h-full rounded-2xl overflow-hidden bg-background-secondary">
-                        <img
-                          src={profile?.profileImage || '/monther.jpg'}
-                          alt={`Profile photo of ${profile?.name || 'Monther Alzamli'}`}
-                          className="w-full h-full object-top object-cover"
-                          loading="eager"
-                          width="384"
-                          height="384"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Floating elements */}
-                  <div className="absolute -top-4 -right-4 w-16 h-16 bg-primary-400 rounded-2xl flex items-center justify-center shadow-lg animate-pulse">
-                    <span className="text-white font-bold text-lg">Dev</span>
-                  </div>
-                  <div
-                    className="absolute -bottom-4 -left-4 w-16 h-16 bg-primary-500 rounded-2xl flex items-center justify-center shadow-lg animate-pulse"
-                    style={{ animationDelay: '1s' }}
-                  >
-                    <span className="text-white font-bold text-lg">Code</span>
-                  </div>
-                </div>
-
-                {/* Background decoration */}
-                <div className="absolute inset-0 -z-10">
-                  <div className="w-full h-full bg-primary-400/10 rounded-3xl blur-2xl scale-110"></div>
-                </div>
-              </div>
-            </div>
+          <div
+            className="hero-in mt-8 flex flex-col gap-3 sm:flex-row"
+            style={step(3)}
+          >
+            <a href="#projects" className="btn btn-accent group">
+              View projects
+              <ArrowDown
+                className="h-4 w-4 transition-transform duration-200 ease-out group-hover:translate-y-0.5"
+                aria-hidden="true"
+              />
+            </a>
+            <a href="#contact" className="btn btn-outline">
+              Contact me
+            </a>
           </div>
 
-          {/* Scroll Indicator */}
-          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
-            <div className="animate-bounce">
-              <a
-                href="#about"
-                className="group flex flex-col items-center text-text-secondary hover:text-primary-400 transition-colors duration-200"
-              >
-                <span className="text-sm font-medium mb-2">
-                  Scroll to explore
-                </span>
-                <ArrowDown className="h-6 w-6 group-hover:translate-y-1 transition-transform duration-200" />
-              </a>
+          <div
+            className="hero-in mt-8 flex flex-wrap items-center gap-x-6 gap-y-4"
+            style={step(4)}
+          >
+            <p className="inline-flex items-center gap-2 font-mono text-sm text-muted">
+              <span
+                className="h-2 w-2 rounded-full bg-brand"
+                aria-hidden="true"
+              />
+              {hero.availability}
+            </p>
+
+            <ul className="flex gap-2">
+              {profile.github && (
+                <li>
+                  <a
+                    href={profile.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="icon-btn"
+                    aria-label="GitHub profile (opens in a new tab)"
+                  >
+                    <Github className="h-5 w-5" aria-hidden="true" />
+                  </a>
+                </li>
+              )}
+              {profile.linkedin && (
+                <li>
+                  <a
+                    href={profile.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="icon-btn"
+                    aria-label="LinkedIn profile (opens in a new tab)"
+                  >
+                    <Linkedin className="h-5 w-5" aria-hidden="true" />
+                  </a>
+                </li>
+              )}
+              {profile.email && (
+                <li>
+                  <a
+                    href={`mailto:${profile.email}`}
+                    className="icon-btn"
+                    aria-label={`Email ${profile.email}`}
+                  >
+                    <Mail className="h-5 w-5" aria-hidden="true" />
+                  </a>
+                </li>
+              )}
+            </ul>
+          </div>
+        </div>
+
+        {/* Decorative: repeats what the text beside it already says */}
+        <div className="hero-in" style={step(3)} aria-hidden="true">
+          <div className="overflow-hidden rounded-lg border border-term-line bg-term-bg shadow-lift">
+            <div className="flex items-center gap-2 border-b border-term-line px-4 py-3">
+              <span className="h-3 w-3 rounded-full bg-[#f87171]" />
+              <span className="h-3 w-3 rounded-full bg-[#fbbf24]" />
+              <span className="h-3 w-3 rounded-full bg-[#4ade80]" />
+              <span className="ml-3 truncate font-mono text-xs text-term-muted">
+                {profile.name.split(' ')[0].toLowerCase()}@portfolio: ~
+              </span>
             </div>
+
+            <HeroTerminal
+              name={profile.name}
+              title={profile.title}
+              stack={hero.stack}
+            />
           </div>
         </div>
       </div>
