@@ -33,10 +33,8 @@ A modern, dynamic portfolio website with an admin dashboard for content manageme
 - **Toast Notifications**: User feedback system
 
 ### Deployment
-- **VPS**: Ubuntu server with PM2
-- **NGINX**: Reverse proxy and SSL termination
-- **PM2**: Process manager for Node.js applications
-- **Let's Encrypt**: SSL certificate management
+- **Vercel**: Hosting, serverless functions, and automatic SSL
+- **Hosted PostgreSQL**: Neon (or any Postgres provider with connection pooling)
 
 ## 📋 Project Structure
 
@@ -57,16 +55,16 @@ portfolio/
 │   │   ├── auth.ts           # NextAuth configuration
 │   │   ├── cloudinary.ts     # Cloudinary client
 │   │   ├── prisma.ts         # Prisma client
+│   │   ├── requireAdmin.ts   # Session check for admin-only API routes
 │   │   └── password.ts       # Password hashing
 │   └── middleware.ts         # Next.js middleware
 ├── prisma/
 │   ├── schema.prisma          # Database schema
-│   ├── seed.ts               # Database seeding script
-│   └── migrations/           # Database migrations
+│   └── seed.ts               # Database seeding script
 ├── scripts/
 │   └── create-admin.ts       # Admin user creation script
 ├── public/                    # Static assets
-├── .env.example              # Environment variables template
+├── env.example               # Environment variables template
 └── package.json              # Dependencies and scripts
 ```
 
@@ -88,7 +86,7 @@ Create a `.env.local` file in the root directory with the following variables:
 
 ```env
 # Database
-DATABASE_URL="postgresql://username:password@localhost:5432/database_name"
+DATABASE_URL="postgresql://username:password@host/database?sslmode=require"
 
 # NextAuth.js
 NEXTAUTH_URL="http://localhost:3000"
@@ -98,13 +96,11 @@ NEXTAUTH_SECRET="your-secret-key-here"
 CLOUDINARY_CLOUD_NAME="your-cloud-name"
 CLOUDINARY_API_KEY="your-api-key"
 CLOUDINARY_API_SECRET="your-api-secret"
-
-# App Configuration
-NODE_ENV="development"
-PORT="3000"
 ```
 
-See `env.example` for detailed descriptions of each variable.
+`NEXTAUTH_SECRET` is required; generate one with `openssl rand -base64 32`.
+
+The Prisma CLI and the scripts in `prisma/` and `scripts/` read `.env`, not `.env.local`, so put `DATABASE_URL` in `.env` as well (or export it in your shell) before running them.
 
 ## 🚀 Getting Started
 
@@ -132,6 +128,7 @@ See `env.example` for detailed descriptions of each variable.
    ```bash
    cp env.example .env.local
    # Edit .env.local with your credentials
+   # Also put DATABASE_URL in .env so the Prisma CLI can read it
    ```
 
 4. **Set up the database**
@@ -166,127 +163,85 @@ See `env.example` for detailed descriptions of each variable.
 ## 📦 Available Scripts
 
 - `npm run dev`: Start development server
-- `npm run build`: Build for production
+- `npm run build`: Generate the Prisma client and build for production
 - `npm run start`: Start production server
 - `npm run lint`: Run ESLint
 - `npm run format`: Format code with Prettier
+- `npm run type-check`: Run the TypeScript compiler without emitting
 - `npm run db:push`: Push Prisma schema to database
 - `npm run db:studio`: Open Prisma Studio
-- `npm run seed`: Seed the database
 
 ## 🖥️ Deployment
 
-### VPS Deployment with PM2 and NGINX
+### Vercel
 
 #### Prerequisites
 
-- Ubuntu/Debian VPS
-- Node.js and npm installed
-- PostgreSQL installed
-- Domain name pointed to your VPS IP
+- A Vercel account connected to this GitHub repository
+- A hosted PostgreSQL database (Neon via the Vercel Storage tab is the simplest)
+- A Cloudinary account
+- Access to the DNS settings of your domain
 
 #### Deployment Steps
 
-1. **Clone the repository on your VPS**
-   ```bash
-   cd /var/www
-   git clone https://github.com/MontherIsmail/Portfolio.git
-   cd Portfolio
-   ```
+1. **Create the database**
 
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
+   In the Vercel dashboard open **Storage → Create Database → Neon** and connect it to the project, or create a database at your Postgres provider and copy its pooled connection string.
 
-3. **Create production environment file**
-   ```bash
-   cp env.example .env.production
-   # Edit .env.production with production credentials
-   ```
+2. **Create the tables**
 
-4. **Set up PostgreSQL database**
-   ```bash
-   sudo -u postgres psql
-   CREATE DATABASE portfolio_db;
-   CREATE USER portfolio_user WITH PASSWORD 'your_password';
-   GRANT ALL PRIVILEGES ON DATABASE portfolio_db TO portfolio_user;
-   \q
-   ```
+   Run this once from your machine, with `DATABASE_URL` in `.env` pointing at the new database (use the direct, non-pooled connection string for this step if your provider gives you both):
 
-5. **Push database schema**
    ```bash
-   export DATABASE_URL="postgresql://portfolio_user:password@localhost:5432/portfolio_db"
    npx prisma db push
    ```
 
-6. **Seed the database**
-   ```bash
-   npx tsx prisma/seed.ts
-   ```
+3. **Add content and an admin user**
 
-7. **Create admin user**
    ```bash
+   # Optional: sample content
+   npx tsx prisma/seed.ts
+
+   # Admin login for the dashboard
    npx tsx scripts/create-admin.ts
    ```
 
-8. **Build the application**
-   ```bash
-   npm run build
-   ```
+   To move content from an existing Postgres database instead of seeding, restore a `pg_dump` of it into the new database.
 
-9. **Start with PM2**
-   ```bash
-   DATABASE_URL="your_database_url" PORT=3002 pm2 start npm --name "portfolio-app" -- start
-   pm2 save
-   ```
+4. **Import the project in Vercel**
 
-10. **Configure NGINX**
-    
-    Create `/etc/nginx/sites-available/portfolio`:
-    ```nginx
-    server {
-        listen 80;
-        server_name montheralzamli.com www.montheralzamli.com;
+   **Add New → Project**, pick the repository and keep the detected Next.js settings. The build command (`npm run build`) generates the Prisma client before building.
 
-        location /_next/ {
-            proxy_pass http://localhost:3002/_next/;
-            proxy_set_header Host $host;
-        }
+5. **Set the environment variables**
 
-        location /admin {
-            proxy_pass http://localhost:3002/admin;
-            proxy_set_header Host $host;
-        }
+   In **Project → Settings → Environment Variables**:
 
-        location / {
-            proxy_pass http://localhost:3002;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $scheme;
-        }
-    }
-    ```
+   | Variable                | Value                                          |
+   | ----------------------- | ---------------------------------------------- |
+   | `DATABASE_URL`          | Pooled Postgres connection string              |
+   | `NEXTAUTH_URL`          | `https://montheralzamli.com`                   |
+   | `NEXTAUTH_SECRET`       | Output of `openssl rand -base64 32`            |
+   | `CLOUDINARY_CLOUD_NAME` | From the Cloudinary dashboard                  |
+   | `CLOUDINARY_API_KEY`    | From the Cloudinary dashboard                  |
+   | `CLOUDINARY_API_SECRET` | From the Cloudinary dashboard                  |
 
-    Enable the site:
-    ```bash
-    sudo ln -s /etc/nginx/sites-available/portfolio /etc/nginx/sites-enabled/
-    sudo nginx -t
-    sudo systemctl reload nginx
-    ```
+   Redeploy after changing any of them.
 
-11. **Set up SSL with Let's Encrypt**
-    ```bash
-    sudo certbot --nginx -d montheralzamli.com -d www.montheralzamli.com
-    ```
+6. **Add the domain**
+
+   In **Project → Settings → Domains** add `montheralzamli.com` and `www.montheralzamli.com`, then create the DNS records Vercel shows you. SSL certificates are issued automatically.
+
+After a schema change in `prisma/schema.prisma`, run `npx prisma db push` against the production database before deploying the code that depends on it.
 
 ### Access URLs
 
 - **Portfolio**: https://montheralzamli.com
 - **Admin Dashboard**: https://montheralzamli.com/admin/login
-- **Ecommerce**: https://montheralzamli.com/ecommerce
-- **Ecommerce Admin**: https://montheralzamli.com/ecommerce-admin
+
+### Platform Limits
+
+- **Uploads**: Vercel rejects request bodies over 4.5MB, so image uploads are limited to 4MB.
+- **Filesystem**: Serverless functions cannot write to disk. All content lives in PostgreSQL and all images in Cloudinary.
 
 ## 👨‍💻 Admin Dashboard Features
 
@@ -335,38 +290,27 @@ Page sections are located in `src/components/sections/`:
 
 ### Database Connection Issues
 
-If you're having trouble connecting to the database:
+- Check that `DATABASE_URL` is set for the environment you are deploying to (Production, Preview) and redeploy after changing it.
+- Use the pooled connection string on Vercel; serverless functions open many short-lived connections.
+- Verify the connection from your machine:
+
+  ```bash
+  npx prisma db pull --print
+  ```
+
+### Admin Login Issues
+
+- `NEXTAUTH_SECRET` must be set, and `NEXTAUTH_URL` must match the domain you are visiting.
+- Admin API routes return `401 Unauthorized` when the session has expired; sign in again.
+
+### Build and Runtime Errors
 
 ```bash
-# Verify PostgreSQL is running
-sudo systemctl status postgresql
-
-# Check database credentials
-psql -h localhost -U portfolio_user -d portfolio_db
+# Reproduce the production build locally
+npm run build
 ```
 
-### PM2 Process Issues
-
-```bash
-# View logs
-pm2 logs portfolio-app
-
-# Restart the application
-pm2 restart portfolio-app
-
-# Check status
-pm2 status
-```
-
-### NGINX Configuration
-
-```bash
-# Test configuration
-sudo nginx -t
-
-# Reload NGINX
-sudo systemctl reload nginx
-```
+Runtime logs for each function are in the Vercel dashboard under **Project → Logs**.
 
 ## 📄 License
 
@@ -386,4 +330,4 @@ MIT License - see [LICENSE](LICENSE) file for details.
 - Styled with [Tailwind CSS](https://tailwindcss.com/)
 - Icons from [Lucide](https://lucide.dev/)
 - Images hosted on [Cloudinary](https://cloudinary.com/)
-- Deployed with [PM2](https://pm2.keymetrics.io/)
+- Deployed on [Vercel](https://vercel.com/)

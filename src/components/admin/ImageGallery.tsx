@@ -80,11 +80,11 @@ export default function ImageGallery({
       return;
     }
 
-    // Validate file size (5MB limit)
-    if (file.size > 5 * 1024 * 1024) {
+    // Validate file size (4MB limit, Vercel rejects request bodies over 4.5MB)
+    if (file.size > 4 * 1024 * 1024) {
       Swal.fire({
         title: 'File Too Large!',
-        text: 'Please select an image smaller than 5MB.',
+        text: 'Please select an image smaller than 4MB.',
         icon: 'error',
         color: '#e2e8f0',
         background: '#1e293b',
@@ -297,7 +297,7 @@ export default function ImageGallery({
                       Click to upload image
                     </span>
                     <span className="text-xs text-text-secondary mt-1">
-                      Max 5MB
+                      Max 4MB
                     </span>
                   </div>
                 )}

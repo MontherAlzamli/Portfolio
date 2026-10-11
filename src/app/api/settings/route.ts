@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import logger from '@/lib/logger';
+import { requireAdmin } from '@/lib/requireAdmin';
+
+export const dynamic = 'force-dynamic';
 
 // Validation schema for settings
 const SettingsSchema = z.object({
@@ -16,6 +19,9 @@ const SettingsSchema = z.object({
 
 // GET /api/settings - Get settings data
 export async function GET() {
+  const unauthorized = await requireAdmin();
+  if (unauthorized) return unauthorized;
+
   try {
     // Get profile data for site settings
     const profile = await prisma.profile.findFirst();
@@ -42,6 +48,9 @@ export async function GET() {
 
 // PUT /api/settings - Update settings
 export async function PUT(request: NextRequest) {
+  const unauthorized = await requireAdmin();
+  if (unauthorized) return unauthorized;
+
   try {
     const body = await request.json();
     const validatedData = SettingsSchema.parse(body);

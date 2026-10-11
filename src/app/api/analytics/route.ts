@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import logger from '@/lib/logger';
+import { requireAdmin } from '@/lib/requireAdmin';
+
+export const dynamic = 'force-dynamic';
 
 // GET /api/analytics - Get analytics data
 export async function GET() {
+  const unauthorized = await requireAdmin();
+  if (unauthorized) return unauthorized;
+
   try {
     // Get counts from database
     const [projectsCount, skillsCount, experienceCount, contactsCount] =

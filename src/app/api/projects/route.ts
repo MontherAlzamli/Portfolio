@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import logger from '@/lib/logger';
+import { requireAdmin } from '@/lib/requireAdmin';
 
 // Helper function to generate slug
 const generateSlug = (title: string) => {
@@ -92,6 +93,9 @@ export async function GET(request: NextRequest) {
 
 // POST /api/projects - Create new project
 export async function POST(request: NextRequest) {
+  const unauthorized = await requireAdmin();
+  if (unauthorized) return unauthorized;
+
   try {
     const body = await request.json();
     const validatedData = ProjectSchema.parse(body);

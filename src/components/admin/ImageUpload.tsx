@@ -39,11 +39,11 @@ export default function ImageUpload({
       return;
     }
 
-    // Validate file size (5MB limit)
-    if (file.size > 5 * 1024 * 1024) {
+    // Validate file size (4MB limit, Vercel rejects request bodies over 4.5MB)
+    if (file.size > 4 * 1024 * 1024) {
       Swal.fire({
         title: 'File Too Large!',
-        text: 'Please select an image smaller than 5MB.',
+        text: 'Please select an image smaller than 4MB.',
         icon: 'error',
         color: '#e2e8f0',
         background: '#1e293b',
@@ -232,7 +232,7 @@ export default function ImageUpload({
                 : 'Drag and drop or click to select'}
             </div>
             <div className="text-xs text-text-secondary">
-              Supports: JPG, PNG, GIF, WebP • Max 5MB
+              Supports: JPG, PNG, GIF, WebP • Max 4MB
             </div>
           </div>
         )}

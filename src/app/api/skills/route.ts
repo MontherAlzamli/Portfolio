@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import logger from '@/lib/logger';
+import { requireAdmin } from '@/lib/requireAdmin';
 
 // Validation schemas
 const SkillSchema = z.object({
@@ -82,6 +83,9 @@ export async function GET(request: NextRequest) {
 
 // POST /api/skills - Create new skill
 export async function POST(request: NextRequest) {
+  const unauthorized = await requireAdmin();
+  if (unauthorized) return unauthorized;
+
   try {
     const body = await request.json();
     const validatedData = SkillSchema.parse(body);

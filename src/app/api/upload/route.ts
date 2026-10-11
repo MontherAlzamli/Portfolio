@@ -2,9 +2,16 @@ import { NextRequest, NextResponse } from 'next/server';
 import { uploadImage, deleteImage, getImageInfo } from '@/lib/cloudinary';
 import { prisma } from '@/lib/prisma';
 import logger from '@/lib/logger';
+import { requireAdmin } from '@/lib/requireAdmin';
+
+// Vercel rejects request bodies over 4.5MB
+const MAX_FILE_SIZE = 4 * 1024 * 1024;
 
 // POST /api/upload - Upload image to Cloudinary
 export async function POST(request: NextRequest) {
+  const unauthorized = await requireAdmin();
+  if (unauthorized) return unauthorized;
+
   try {
     const formData = await request.formData();
     const file = formData.get('file') as File;
@@ -14,6 +21,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { success: false, error: 'No file provided' },
         { status: 400 }
+      );
+    }
+
+    if (file.size > MAX_FILE_SIZE) {
+      return NextResponse.json(
+        { success: false, error: 'Image must be smaller than 4MB' },
+        { status: 413 }
       );
     }
 
@@ -70,6 +84,9 @@ export async function POST(request: NextRequest) {
 
 // DELETE /api/upload - Delete image from Cloudinary
 export async function DELETE(request: NextRequest) {
+  const unauthorized = await requireAdmin();
+  if (unauthorized) return unauthorized;
+
   try {
     const { searchParams } = new URL(request.url);
     const publicId = searchParams.get('publicId');
@@ -115,6 +132,9 @@ export async function DELETE(request: NextRequest) {
 
 // GET /api/upload - Get image info
 export async function GET(request: NextRequest) {
+  const unauthorized = await requireAdmin();
+  if (unauthorized) return unauthorized;
+
   try {
     const { searchParams } = new URL(request.url);
     const publicId = searchParams.get('publicId');

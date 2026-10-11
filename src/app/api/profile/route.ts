@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import logger from '@/lib/logger';
+import { requireAdmin } from '@/lib/requireAdmin';
+
+export const dynamic = 'force-dynamic';
 
 // Handle CORS preflight requests
 export async function OPTIONS(request: NextRequest) {
@@ -118,6 +121,9 @@ export async function GET() {
 
 // PUT /api/profile - Update profile data
 export async function PUT(request: NextRequest) {
+  const unauthorized = await requireAdmin();
+  if (unauthorized) return unauthorized;
+
   try {
     const body = await request.json();
     const validatedData = ProfileSchema.parse(body);
