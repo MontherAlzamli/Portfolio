@@ -16,12 +16,14 @@ import {
   X,
   Mail,
   Image,
+  GraduationCap,
   ExternalLink,
   LogOut,
 } from 'lucide-react';
 import ProjectsTab from '@/components/admin/ProjectsTab';
 import SkillsTab from '@/components/admin/SkillsTab';
 import ExperienceTab from '@/components/admin/ExperienceTab';
+import EducationTab from '@/components/admin/EducationTab';
 import ProfileTab from '@/components/admin/ProfileTab';
 import AnalyticsTab from '@/components/admin/AnalyticsTab';
 import SettingsTab from '@/components/admin/SettingsTab';
@@ -35,6 +37,7 @@ const sidebarItems = [
   { id: 'projects', label: 'Projects', icon: FolderOpen },
   { id: 'skills', label: 'Skills', icon: Code },
   { id: 'experience', label: 'Experience', icon: Briefcase },
+  { id: 'education', label: 'Education', icon: GraduationCap },
   { id: 'profile', label: 'Profile', icon: User },
   { id: 'contacts', label: 'Messages', icon: Mail },
   { id: 'images', label: 'Images', icon: Image },
@@ -61,6 +64,8 @@ export default function AdminDashboard() {
         return <SkillsTab />;
       case 'experience':
         return <ExperienceTab />;
+      case 'education':
+        return <EducationTab />;
       case 'profile':
         return <ProfileTab />;
       case 'contacts':

@@ -4,10 +4,15 @@ import type { PublicProfile } from '@/lib/content';
 type StructuredDataProps = {
   profile: PublicProfile;
   skills: string[];
+  schools: string[];
 };
 
 // JSON-LD rendered on the server so search engines read it without running JS
-export function StructuredData({ profile, skills }: StructuredDataProps) {
+export function StructuredData({
+  profile,
+  skills,
+  schools,
+}: StructuredDataProps) {
   const image = profile.profileImage?.startsWith('/')
     ? `${site.url}${profile.profileImage}`
     : profile.profileImage;
@@ -36,6 +41,14 @@ export function StructuredData({ profile, skills }: StructuredDataProps) {
           Boolean
         ),
         ...(skills.length > 0 ? { knowsAbout: skills } : {}),
+        ...(schools.length > 0
+          ? {
+              alumniOf: Array.from(new Set(schools)).map(name => ({
+                '@type': 'EducationalOrganization',
+                name,
+              })),
+            }
+          : {}),
       },
       {
         '@type': 'WebSite',

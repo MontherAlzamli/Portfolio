@@ -50,6 +50,17 @@ model Experience {
   order       Int       @default(0)
 }
 
+model Education {
+  id          String    @id @default(cuid())
+  institution String
+  degree      String
+  startDate   DateTime
+  endDate     DateTime?
+  description String    @default("")
+  current     Boolean   @default(false)
+  order       Int       @default(0)
+}
+
 model Profile {
   id           String   @id @default(cuid())
   name         String

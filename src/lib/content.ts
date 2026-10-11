@@ -1,4 +1,10 @@
-import type { Experience, Profile, Project, Skill } from '@prisma/client';
+import type {
+  Education,
+  Experience,
+  Profile,
+  Project,
+  Skill,
+} from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import logger from '@/lib/logger';
 import { site } from '@/data/site';
@@ -23,6 +29,7 @@ export type SiteContent = {
   skills: Skill[];
   projects: Project[];
   experience: Experience[];
+  education: Education[];
   stats: { years: number | null; projects: number | null; skills: number };
 };
 
@@ -47,9 +54,9 @@ function yearsSince(date: Date) {
 }
 
 // One failing query should not blank the rest of the page
-async function safe<T>(label: string, query: Promise<T>, fallback: T) {
+async function safe<T>(label: string, query: () => Promise<T>, fallback: T) {
   try {
-    return await query;
+    return await query();
   } catch (error) {
     logger.error(`Error loading ${label}:`, error);
     return fallback;
@@ -58,23 +65,30 @@ async function safe<T>(label: string, query: Promise<T>, fallback: T) {
 
 // Loads everything the public page renders, on the server
 export async function getSiteContent(): Promise<SiteContent> {
-  const [profile, skills, projects, experience] = await Promise.all([
-    safe('profile', prisma.profile.findFirst(), null),
+  const [profile, skills, projects, experience, education] = await Promise.all([
+    safe('profile', () => prisma.profile.findFirst(), null),
     safe(
       'skills',
-      prisma.skill.findMany({ orderBy: [{ order: 'asc' }, { name: 'asc' }] }),
+      () =>
+        prisma.skill.findMany({ orderBy: [{ order: 'asc' }, { name: 'asc' }] }),
       []
     ),
     safe(
       'projects',
-      prisma.project.findMany({
-        orderBy: [{ featured: 'desc' }, { createdAt: 'desc' }],
-      }),
+      () =>
+        prisma.project.findMany({
+          orderBy: [{ featured: 'desc' }, { createdAt: 'desc' }],
+        }),
       []
     ),
     safe(
       'experience',
-      prisma.experience.findMany({ orderBy: { startDate: 'desc' } }),
+      () => prisma.experience.findMany({ orderBy: { startDate: 'desc' } }),
+      []
+    ),
+    safe(
+      'education',
+      () => prisma.education.findMany({ orderBy: { startDate: 'desc' } }),
       []
     ),
   ]);
@@ -86,6 +100,7 @@ export async function getSiteContent(): Promise<SiteContent> {
     skills,
     projects,
     experience,
+    education,
     stats: {
       years:
         site.stats.yearsOfExperience ??

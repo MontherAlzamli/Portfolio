@@ -5,7 +5,13 @@ import { Menu, X } from 'lucide-react';
 import { site } from '@/data/site';
 import { ThemeToggle } from '@/components/layout/ThemeToggle';
 
-export function Navigation({ name }: { name: string }) {
+type NavigationProps = { name: string; hasEducation: boolean };
+
+export function Navigation({ name, hasEducation }: NavigationProps) {
+  // The education link only makes sense when that section is rendered
+  const items = site.nav.filter(
+    item => item.id !== 'education' || hasEducation
+  );
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState('home');
@@ -19,7 +25,7 @@ export function Navigation({ name }: { name: string }) {
 
   // The active section is the one crossing the middle of the viewport
   useEffect(() => {
-    const sections = site.nav
+    const sections = items
       .map(item => document.getElementById(item.id))
       .filter((el): el is HTMLElement => el !== null);
 
@@ -71,8 +77,8 @@ export function Navigation({ name }: { name: string }) {
           </a>
 
           <div className="flex items-center gap-2">
-            <ul className="hidden items-center md:flex">
-              {site.nav.map(item => {
+            <ul className="hidden items-center lg:flex">
+              {items.map(item => {
                 const isActive = active === item.id;
                 return (
                   <li key={item.id}>
@@ -101,7 +107,7 @@ export function Navigation({ name }: { name: string }) {
             <button
               type="button"
               onClick={() => setIsOpen(open => !open)}
-              className="icon-btn md:hidden"
+              className="icon-btn lg:hidden"
               aria-label={isOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={isOpen}
               aria-controls="mobile-menu"
@@ -118,14 +124,14 @@ export function Navigation({ name }: { name: string }) {
         {/* Stays in the DOM so it can animate; `invisible` removes it from tab order */}
         <div
           id="mobile-menu"
-          className={`absolute inset-x-0 top-16 border-b border-line bg-bg transition-[opacity,transform,visibility] duration-200 ease-out md:hidden ${
+          className={`absolute inset-x-0 top-16 border-b border-line bg-bg transition-[opacity,transform,visibility] duration-200 ease-out lg:hidden ${
             isOpen
               ? 'visible translate-y-0 opacity-100'
               : 'invisible -translate-y-2 opacity-0'
           }`}
         >
           <ul className="wrap py-3">
-            {site.nav.map(item => {
+            {items.map(item => {
               const isActive = active === item.id;
               return (
                 <li key={item.id}>

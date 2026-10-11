@@ -1,6 +1,13 @@
 import { site } from '@/data/site';
 
-export function Footer({ name }: { name: string }) {
+type FooterProps = { name: string; hasEducation: boolean };
+
+export function Footer({ name, hasEducation }: FooterProps) {
+  // The education link only makes sense when that section is rendered
+  const items = site.nav.filter(
+    item => item.id !== 'education' || hasEducation
+  );
+
   return (
     <footer className="border-t border-line py-8">
       <div className="wrap flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -10,7 +17,7 @@ export function Footer({ name }: { name: string }) {
 
         <nav aria-label="Footer">
           <ul className="-mx-2 flex flex-wrap">
-            {site.nav.map(item => (
+            {items.map(item => (
               <li key={item.id}>
                 <a
                   href={`#${item.id}`}

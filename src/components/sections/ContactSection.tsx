@@ -15,7 +15,7 @@ export function ContactSection({ profile }: { profile: PublicProfile }) {
     <section id="contact" className="section border-t border-line">
       <div className="wrap">
         <SectionHeading
-          index="05"
+          index="06"
           label="contact"
           title="Let's work together"
           description={site.contact.intro}
