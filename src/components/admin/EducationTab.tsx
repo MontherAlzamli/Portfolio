@@ -60,7 +60,7 @@ export default function EducationTab() {
 
   const fetchEducations = async () => {
     try {
-      const response = await fetch('/api/education', {
+      const response = await fetch('/api/education?limit=500', {
         cache: 'no-store',
         headers: {
           'Cache-Control': 'no-cache',

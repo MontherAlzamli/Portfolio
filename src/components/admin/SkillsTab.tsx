@@ -64,7 +64,7 @@ export default function SkillsTab() {
 
   const fetchSkills = async () => {
     try {
-      const response = await fetch('/api/skills');
+      const response = await fetch('/api/skills?limit=500');
       if (response.ok) {
         const data = await response.json();
         setSkills(data.data || []);

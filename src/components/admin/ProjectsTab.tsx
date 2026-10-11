@@ -71,7 +71,7 @@ export default function ProjectsTab() {
 
   const fetchProjects = async () => {
     try {
-      const response = await fetch('/api/projects', {
+      const response = await fetch('/api/projects?limit=500', {
         cache: 'no-store',
         headers: {
           'Cache-Control': 'no-cache',

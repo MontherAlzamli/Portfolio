@@ -41,7 +41,7 @@ export default function ContactsTab() {
 
   const fetchContacts = async () => {
     try {
-      const response = await fetch('/api/contacts', {
+      const response = await fetch('/api/contacts?limit=500', {
         cache: 'no-store',
         headers: {
           'Cache-Control': 'no-cache',

@@ -60,7 +60,7 @@ export default function ExperienceTab() {
 
   const fetchExperiences = async () => {
     try {
-      const response = await fetch('/api/experience', {
+      const response = await fetch('/api/experience?limit=500', {
         cache: 'no-store',
         headers: {
           'Cache-Control': 'no-cache',

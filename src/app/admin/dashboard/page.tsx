@@ -215,28 +215,28 @@ function OverviewTab() {
     try {
       const [projectsRes, skillsRes, experienceRes, contactsRes] =
         await Promise.all([
-          fetch('/api/projects', {
+          fetch('/api/projects?limit=500', {
             cache: 'no-store',
             headers: {
               'Cache-Control': 'no-cache',
               Pragma: 'no-cache',
             },
           }),
-          fetch('/api/skills', {
+          fetch('/api/skills?limit=500', {
             cache: 'no-store',
             headers: {
               'Cache-Control': 'no-cache',
               Pragma: 'no-cache',
             },
           }),
-          fetch('/api/experience', {
+          fetch('/api/experience?limit=500', {
             cache: 'no-store',
             headers: {
               'Cache-Control': 'no-cache',
               Pragma: 'no-cache',
             },
           }),
-          fetch('/api/contacts', {
+          fetch('/api/contacts?limit=500', {
             cache: 'no-store',
             headers: {
               'Cache-Control': 'no-cache',
