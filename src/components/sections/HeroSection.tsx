@@ -10,6 +10,10 @@ const step = (d: number) => ({ '--d': d }) as CSSProperties;
 
 export function HeroSection({ profile }: { profile: PublicProfile }) {
   const { hero } = site;
+  // Edited in the dashboard; the defaults in site.ts apply while a field is empty
+  const headline = profile.heroHeadline?.trim() || hero.headline;
+  const valueProp = profile.heroText?.trim() || hero.valueProp;
+  const availability = profile.availability?.trim() || hero.availability;
 
   return (
     <section
@@ -41,14 +45,14 @@ export function HeroSection({ profile }: { profile: PublicProfile }) {
             className="hero-in font-mono text-display font-semibold text-fg text-balance"
             style={step(1)}
           >
-            {hero.headline}
+            {headline}
           </h1>
 
           <p
             className="hero-in mt-6 max-w-xl text-lg leading-relaxed text-muted"
             style={step(2)}
           >
-            {hero.valueProp}
+            {valueProp}
           </p>
 
           <div
@@ -77,7 +81,7 @@ export function HeroSection({ profile }: { profile: PublicProfile }) {
                 className="h-2 w-2 rounded-full bg-brand"
                 aria-hidden="true"
               />
-              {hero.availability}
+              {availability}
             </p>
 
             <ul className="flex gap-2">

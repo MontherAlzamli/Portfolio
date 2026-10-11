@@ -99,6 +99,19 @@ const ProfileSchema = z.object({
         message: 'Must be a valid URL or a path like /cv.pdf',
       }
     ),
+  // Hero copy; when empty the site falls back to the defaults in src/data/site.ts
+  heroHeadline: z
+    .string()
+    .max(120, 'Headline must be less than 120 characters')
+    .nullish(),
+  heroText: z
+    .string()
+    .max(400, 'Hero text must be less than 400 characters')
+    .nullish(),
+  availability: z
+    .string()
+    .max(100, 'Availability must be less than 100 characters')
+    .nullish(),
 });
 
 // GET /api/profile - Get profile data from database (seed if missing)

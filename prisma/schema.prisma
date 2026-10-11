@@ -75,6 +75,9 @@ model Profile {
   twitter      String?
   profileImage String?
   cvUrl        String?
+  heroHeadline String?
+  heroText     String?
+  availability String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }

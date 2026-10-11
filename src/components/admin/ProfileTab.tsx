@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import ImageUpload from './ImageUpload';
 import logger from '@/lib/logger';
+import { site } from '@/data/site';
 import {
   Save,
   User,
@@ -31,6 +32,9 @@ interface ProfileData {
   github: string;
   linkedin: string;
   cvUrl: string | null;
+  heroHeadline: string | null;
+  heroText: string | null;
+  availability: string | null;
   profileImage: string;
 }
 
@@ -55,6 +59,9 @@ export default function ProfileTab() {
     github: '',
     linkedin: '',
     cvUrl: '',
+    heroHeadline: '',
+    heroText: '',
+    availability: '',
     profileImage: '/profile-image.jpg',
   });
   const [loading, setLoading] = useState(true);
@@ -304,6 +311,86 @@ export default function ProfileTab() {
                 className="w-full px-3 py-2 bg-bg border border-line rounded-md text-fg focus:ring-2 focus:ring-brand focus:border-transparent resize-none"
                 placeholder="Tell us about yourself..."
               />
+            </div>
+
+            {/* Hero Section */}
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-lg font-semibold text-fg">Hero Section</h3>
+                <p className="text-sm text-muted">
+                  The first thing visitors read. Leave a field empty to use the
+                  default shown in grey.
+                </p>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="hero-headline"
+                  className="block text-sm font-medium text-fg mb-2"
+                >
+                  Headline
+                </label>
+                <input
+                  id="hero-headline"
+                  type="text"
+                  maxLength={120}
+                  value={profileData.heroHeadline ?? ''}
+                  onChange={e =>
+                    setProfileData(prev => ({
+                      ...prev,
+                      heroHeadline: e.target.value,
+                    }))
+                  }
+                  className="w-full px-3 py-2 bg-bg border border-line rounded-md text-fg focus:ring-2 focus:ring-brand focus:border-transparent"
+                  placeholder={site.hero.headline}
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="hero-text"
+                  className="block text-sm font-medium text-fg mb-2"
+                >
+                  Text under the headline
+                </label>
+                <textarea
+                  id="hero-text"
+                  rows={3}
+                  maxLength={400}
+                  value={profileData.heroText ?? ''}
+                  onChange={e =>
+                    setProfileData(prev => ({
+                      ...prev,
+                      heroText: e.target.value,
+                    }))
+                  }
+                  className="w-full px-3 py-2 bg-bg border border-line rounded-md text-fg focus:ring-2 focus:ring-brand focus:border-transparent resize-none"
+                  placeholder={site.hero.valueProp}
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="hero-availability"
+                  className="block text-sm font-medium text-fg mb-2"
+                >
+                  Availability line
+                </label>
+                <input
+                  id="hero-availability"
+                  type="text"
+                  maxLength={100}
+                  value={profileData.availability ?? ''}
+                  onChange={e =>
+                    setProfileData(prev => ({
+                      ...prev,
+                      availability: e.target.value,
+                    }))
+                  }
+                  className="w-full px-3 py-2 bg-bg border border-line rounded-md text-fg focus:ring-2 focus:ring-brand focus:border-transparent"
+                  placeholder={site.hero.availability}
+                />
+              </div>
             </div>
 
             {/* Contact Information */}

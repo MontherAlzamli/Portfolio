@@ -21,6 +21,9 @@ export type PublicProfile = Pick<
   | 'github'
   | 'linkedin'
   | 'cvUrl'
+  | 'heroHeadline'
+  | 'heroText'
+  | 'availability'
   | 'profileImage'
 >;
 
@@ -45,6 +48,9 @@ const fallbackProfile: PublicProfile = {
   github: null,
   linkedin: null,
   cvUrl: null,
+  heroHeadline: null,
+  heroText: null,
+  availability: null,
   profileImage: '/profile-image.jpg',
 };
 
