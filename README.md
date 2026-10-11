@@ -219,7 +219,7 @@ The Prisma CLI and the scripts in `prisma/` and `scripts/` read `.env`, not `.en
    | Variable                | Value                                          |
    | ----------------------- | ---------------------------------------------- |
    | `DATABASE_URL`          | Pooled Postgres connection string              |
-   | `NEXTAUTH_URL`          | `https://montheralzamli.com`                   |
+   | `NEXTAUTH_URL`          | `https://monther-alzamli.com`                   |
    | `NEXTAUTH_SECRET`       | Output of `openssl rand -base64 32`            |
    | `CLOUDINARY_CLOUD_NAME` | From the Cloudinary dashboard                  |
    | `CLOUDINARY_API_KEY`    | From the Cloudinary dashboard                  |
@@ -229,14 +229,14 @@ The Prisma CLI and the scripts in `prisma/` and `scripts/` read `.env`, not `.en
 
 6. **Add the domain**
 
-   In **Project → Settings → Domains** add `montheralzamli.com` and `www.montheralzamli.com`, then create the DNS records Vercel shows you. SSL certificates are issued automatically.
+   In **Project → Settings → Domains** add `monther-alzamli.com` and `www.monther-alzamli.com`, then create the DNS records Vercel shows you. SSL certificates are issued automatically.
 
 After a schema change in `prisma/schema.prisma`, run `npx prisma db push` against the production database before deploying the code that depends on it.
 
 ### Access URLs
 
-- **Portfolio**: https://montheralzamli.com
-- **Admin Dashboard**: https://montheralzamli.com/admin/login
+- **Portfolio**: https://monther-alzamli.com
+- **Admin Dashboard**: https://monther-alzamli.com/admin/login
 
 ### Platform Limits
 
@@ -320,7 +320,7 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 **Monther Alzamli**
 
-- 🌐 Website: [montheralzamli.com](https://montheralzamli.com)
+- 🌐 Website: [monther-alzamli.com](https://monther-alzamli.com)
 - 💼 LinkedIn: [Monther Alzamli](https://www.linkedin.com/in/monther-alzamli/)
 - 🐙 GitHub: [@MontherIsmail](https://github.com/MontherIsmail)
 

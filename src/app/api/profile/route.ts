@@ -100,7 +100,7 @@ export async function GET() {
           email: 'montherismail90@gmail.com',
           phone: '+970 59 123 4567',
           location: 'Palestine',
-          website: 'https://montheralzamli.com',
+          website: 'https://monther-alzamli.com',
           github: 'https://github.com/MontherIsmail',
           linkedin: 'https://linkedin.com/in/MontherAlzamli',
           twitter: 'https://twitter.com/MontherAlzamli',

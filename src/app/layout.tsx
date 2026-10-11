@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://montheralzamli.com'),
+  metadataBase: new URL('https://monther-alzamli.com'),
   title: {
     default: 'Monther Alzamli - Full Stack Developer & Software Engineer',
     template: '%s | Monther Alzamli',
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     'Cloud Computing',
     'DevOps',
   ],
-  authors: [{ name: 'Monther Alzamli', url: 'https://montheralzamli.com' }],
+  authors: [{ name: 'Monther Alzamli', url: 'https://monther-alzamli.com' }],
   creator: 'Monther Alzamli',
   publisher: 'Monther Alzamli',
   formatDetection: {
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://montheralzamli.com',
+    url: 'https://monther-alzamli.com',
     title: 'Monther Alzamli - Full Stack Developer & Software Engineer',
     description:
       'Experienced Full Stack Developer specializing in React, Next.js, Node.js, and modern web technologies. View my portfolio of innovative projects and professional experience.',
@@ -89,7 +89,7 @@ export const metadata: Metadata = {
     yahoo: 'your-yahoo-verification-code',
   },
   alternates: {
-    canonical: 'https://montheralzamli.com',
+    canonical: 'https://monther-alzamli.com',
   },
   category: 'technology',
 };

@@ -11,7 +11,7 @@ Allow: /projects/
 Allow: /sitemap.xml
 
 # Sitemap location
-Sitemap: https://montheralzamli.com/sitemap.xml
+Sitemap: https://monther-alzamli.com/sitemap.xml
 
 # Crawl delay (optional)
 Crawl-delay: 1

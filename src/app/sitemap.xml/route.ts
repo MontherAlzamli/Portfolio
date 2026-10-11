@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
   try {
-    const baseUrl = 'https://montheralzamli.com';
+    const baseUrl = 'https://monther-alzamli.com';
 
     // Get dynamic content from database
     const [projects, experiences] = await Promise.all([

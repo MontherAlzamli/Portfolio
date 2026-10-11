@@ -17,7 +17,7 @@ async function seed() {
         email: 'montherismail90@gmail.com',
         phone: '+970 59 123 4567',
         location: 'Palestine',
-        website: 'https://montheralzamli.com',
+        website: 'https://monther-alzamli.com',
         github: 'https://github.com/MontherIsmail',
         linkedin: 'https://linkedin.com/in/MontherAlzamli',
         twitter: 'https://twitter.com/MontherAlzamli',
@@ -163,7 +163,7 @@ async function seed() {
           'A modern, responsive portfolio website showcasing projects, skills, and experience with smooth animations, dark mode support, and admin dashboard for content management.',
         imageUrl:
           'https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=800',
-        link: 'https://montheralzamli.com',
+        link: 'https://monther-alzamli.com',
         githubUrl: 'https://github.com/MontherIsmail/portfolio',
         technologies:
           'Next.js, TypeScript, Tailwind CSS, Framer Motion, Prisma',
