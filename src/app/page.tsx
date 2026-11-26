@@ -1,5 +1,6 @@
 import { HeroSection } from '@/components/sections/HeroSection';
 import { AboutSection } from '@/components/sections/AboutSection';
+import { IntroVideoSection } from '@/components/sections/IntroVideoSection';
 import { SkillsSection } from '@/components/sections/SkillsSection';
 import { ProjectsSection } from '@/components/sections/ProjectsSection';
 import { ExperienceSection } from '@/components/sections/ExperienceSection';
@@ -32,6 +33,7 @@ export default async function Home() {
       <Navigation name={profile.name} hasEducation={education.length > 0} />
       <main id="main-content">
         <HeroSection profile={profile} />
+        <IntroVideoSection />
         <AboutSection profile={profile} stats={stats} />
         <SkillsSection skills={skills} />
         <ProjectsSection projects={projects} />
