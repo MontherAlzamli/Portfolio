@@ -32,6 +32,7 @@ export const site = {
 
   nav: [
     { name: 'Home', id: 'home' },
+    { name: 'Intro', id: 'intro' },
     { name: 'About', id: 'about' },
     { name: 'Skills', id: 'skills' },
     { name: 'Projects', id: 'projects' },
