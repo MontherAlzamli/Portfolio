@@ -27,7 +27,16 @@ export function StructuredData({
         jobTitle: profile.title,
         description: profile.bio,
         url: site.url,
-        ...(image ? { image } : {}),
+        ...(image
+          ? {
+              image: {
+                '@type': 'ImageObject',
+                url: image,
+                contentUrl: image,
+                caption: `${profile.name}, ${profile.title}`,
+              },
+            }
+          : {}),
         ...(profile.email ? { email: profile.email } : {}),
         ...(profile.location
           ? {
@@ -54,6 +63,13 @@ export function StructuredData({
         url: site.url,
         name: `${profile.name} | ${profile.title}`,
         author: { '@id': `${site.url}/#person` },
+      },
+      {
+        '@type': 'ProfilePage',
+        '@id': `${site.url}/#profilepage`,
+        url: site.url,
+        name: `${profile.name} | ${profile.title}`,
+        mainEntity: { '@id': `${site.url}/#person` },
       },
     ],
   };
