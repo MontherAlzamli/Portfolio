@@ -36,6 +36,7 @@ export const site = {
     { name: 'About', id: 'about' },
     { name: 'Skills', id: 'skills' },
     { name: 'Projects', id: 'projects' },
+    { name: 'Packages', id: 'packages' },
     { name: 'Experience', id: 'experience' },
     { name: 'Education', id: 'education' },
     { name: 'Contact', id: 'contact' },
