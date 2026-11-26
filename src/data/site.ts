@@ -1,7 +1,7 @@
 // Copy and settings for the public site that are not stored in the database.
 // Profile details, skills, projects and experience come from the admin dashboard.
 export const site = {
-  url: 'https://monther-alzamli.com',
+  url: 'https://www.monther-alzamli.com',
   // Used where the database is not available, such as the social sharing image
   name: 'Monther Alzamli',
   role: 'Software Engineer',
