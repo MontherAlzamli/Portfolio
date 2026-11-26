@@ -4,12 +4,12 @@ export const site = {
   url: 'https://monther-alzamli.com',
   // Used where the database is not available, such as the social sharing image
   name: 'Monther Alzamli',
-  role: 'Full Stack Developer',
+  role: 'Software Engineer',
 
   hero: {
     headline: 'I build fast, reliable web apps, end to end.',
     valueProp:
-      'Full Stack Developer working with React, Next.js, Node.js and TypeScript. I turn product ideas into production software, from the database to the interface.',
+      'Software Engineer working with React, Next.js, Node.js and TypeScript. I turn product ideas into production software, from the database to the interface.',
     availability: 'Available for freelance and full-time roles',
     // Shown in the terminal panel next to the headline
     stack: {
