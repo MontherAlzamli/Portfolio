@@ -140,7 +140,7 @@ export function PackagesSection() {
                   {pkg.name}
                 </h3>
                 <p className="mt-3 font-mono text-3xl font-semibold text-brand">
-                  {pkg.price}
+                  <span dir="ltr">{pkg.price}</span>
                 </p>
                 <p className="mt-1 text-sm text-muted">{pkg.time}</p>
 
