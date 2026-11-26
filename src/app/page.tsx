@@ -3,6 +3,7 @@ import { AboutSection } from '@/components/sections/AboutSection';
 import { IntroVideoSection } from '@/components/sections/IntroVideoSection';
 import { SkillsSection } from '@/components/sections/SkillsSection';
 import { ProjectsSection } from '@/components/sections/ProjectsSection';
+import { PackagesSection } from '@/components/sections/PackagesSection';
 import { ExperienceSection } from '@/components/sections/ExperienceSection';
 import { EducationSection } from '@/components/sections/EducationSection';
 import { ContactSection } from '@/components/sections/ContactSection';
@@ -37,6 +38,7 @@ export default async function Home() {
         <AboutSection profile={profile} stats={stats} />
         <SkillsSection skills={skills} />
         <ProjectsSection projects={projects} />
+        <PackagesSection />
         <ExperienceSection experience={experience} />
         <EducationSection education={education} />
         <ContactSection profile={profile} />
