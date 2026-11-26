@@ -16,8 +16,7 @@ const mono = JetBrains_Mono({
   display: 'swap',
 });
 
-const title =
-  'Monther Alzamli | Software Engineer (React, Next.js, Node.js)';
+const title = 'Monther Alzamli | Software Engineer (React, Next.js, Node.js)';
 const description =
   'Software Engineer building fast, reliable web apps with React, Next.js, Node.js and TypeScript. See my projects and experience, and get in touch for freelance work or full-time roles.';
 
