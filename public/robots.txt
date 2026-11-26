@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin/
 Disallow: /api/
 
-Sitemap: https://monther-alzamli.com/sitemap.xml
+Sitemap: https://www.monther-alzamli.com/sitemap.xml
