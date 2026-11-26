@@ -17,9 +17,9 @@ const mono = JetBrains_Mono({
 });
 
 const title =
-  'Monther Alzamli | Full Stack Developer (React, Next.js, Node.js)';
+  'Monther Alzamli | Software Engineer (React, Next.js, Node.js)';
 const description =
-  'Full Stack Developer building fast, reliable web apps with React, Next.js, Node.js and TypeScript. See my projects and experience, and get in touch for freelance work or full-time roles.';
+  'Software Engineer building fast, reliable web apps with React, Next.js, Node.js and TypeScript. See my projects and experience, and get in touch for freelance work or full-time roles.';
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
